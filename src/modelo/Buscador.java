@@ -1,14 +1,16 @@
 package modelo;
 
-import javax.swing.JOptionPane;
 import exceptions.IDNotFoundException;
 
-public class Buscador {
+public class Buscador implements IBuscador{
+    
+    //Constructor vacío.
+    public Buscador(){
+    }
 
-    // Método para buscar un producto por ID
-    public static Producto buscarProductoPorId(Producto[] productos, int id) throws IDNotFoundException{
-        
-            
+    @Override
+    public Producto buscarProductoPorId(Producto[] productos, int id) throws IDNotFoundException {
+                 
             for (Producto producto : productos) {
             
                 if (producto.getId() == id) {
@@ -17,18 +19,15 @@ public class Buscador {
 
                 }
 
-            }
-            
+            }            
             //Si el ID nunca se encontró, tirar la excepción.
             throw new IDNotFoundException("El producto de ID " + id +
-                    " no se ha encontrado.");
-            
-            //JOptionPane.showMessageDialog(null, ex.getMessage());
-            //return null; 
+                    " no se ha encontrado.");    
+        
     }
 
-    // Método para buscar un cliente por ID
-    public static Cliente buscarClientePorId(Cliente[] clientes, int id) throws IDNotFoundException{
+    @Override
+    public Cliente buscarClientePorId(Cliente[] clientes, int id) throws IDNotFoundException {
         
         for (Cliente cliente : clientes) {
         
@@ -39,14 +38,13 @@ public class Buscador {
             }
         
         }
-        //JOptionPane.showMessageDialog(null, "Cliente con ID " + id + " no encontrado.");
         //Si el ID nunca se encontró, tirar la excepción.
-            throw new IDNotFoundException("El cliente de ID " + id +
-                    " no se ha encontrado.");
+        throw new IDNotFoundException("El cliente de ID " + id +
+                " no se ha encontrado.");
     }
 
-    // Método para buscar un vendedor por ID
-    public static Vendedor buscarVendedorPorId(Vendedor[] vendedores, int id) throws IDNotFoundException{
+    @Override
+    public Vendedor buscarVendedorPorId(Vendedor[] vendedores, int id) throws IDNotFoundException {
         
         for (Vendedor vendedor : vendedores) {
         
@@ -57,9 +55,29 @@ public class Buscador {
             }
         
         }
-        //JOptionPane.showMessageDialog(null, "Vendedor con ID " + id + " no encontrado.");
         //Si el ID nunca se encontró, tirar la excepción.
-            throw new IDNotFoundException("El vendedor de ID " + id +
-                    " no se ha encontrado.");
+        throw new IDNotFoundException("El vendedor de ID " + id +
+                " no se ha encontrado.");
+        
     }
+    
+    @Override
+    public NuevaVenta buscarVentaPorId(NuevaVenta[] ventas, int id) throws IDNotFoundException{
+        
+        for(NuevaVenta venta : ventas){
+            
+            if (venta.getIdVenta() == id){
+                
+                return venta;
+                
+            }
+            
+        }
+        
+        //Aquí mandamos la excepción.
+        throw new IDNotFoundException("La venta de ID " + id +
+                " no se ha encontrado.");      
+        
+    }
+
 }
