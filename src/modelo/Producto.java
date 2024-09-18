@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
 
 import java.util.Objects;
@@ -18,6 +14,7 @@ public class Producto {
     private int stockMin;
     private int stockMax;
     private int existencias;
+    private int cantidad; //Esto es requerido en la factura.
     
     //Constructor vacío.
     public Producto(){
@@ -27,7 +24,7 @@ public class Producto {
     // Constructor
     public Producto(int id, String nombre, String ubicacion, double precio, double costo,
                     double descuento, String categoria, String proveedor, int stockMin,
-                    int stockMax, int existencias) {
+                    int stockMax, int existencias, int cantidad) {
         this.id = id;
         this.nombre = nombre;
         this.ubicacion = ubicacion;
@@ -39,6 +36,7 @@ public class Producto {
         this.stockMin = stockMin;
         this.stockMax = stockMax;
         this.existencias = existencias;
+        this.cantidad = cantidad;
     }
 
     //Setters y Getters
@@ -53,6 +51,7 @@ public class Producto {
     public void setStockMin(int stockMin) { this.stockMin = stockMin; }
     public void setStockMax(int stockMax) { this.stockMax = stockMax; }
     public void setExistencias(int existencias) { this.existencias = existencias; }
+    public void setCantidad(int cantidad){ this.cantidad = cantidad; }
 
 
     public int getId() { return id; }
@@ -66,7 +65,8 @@ public class Producto {
     public int getStockMin() { return stockMin; }
     public int getStockMax() { return stockMax; }
     public int getExistencias() { return existencias; }
-
+    public int getCantidad() { return cantidad; }
+    
 
     @Override
     public String toString() {
@@ -115,4 +115,3 @@ public class Producto {
     
     
 }
-
