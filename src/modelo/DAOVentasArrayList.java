@@ -9,13 +9,13 @@ import java.util.logging.Logger;
 public class DAOVentasArrayList implements IDAOVenta{
     
     //Atributos para las ventas.
-    private List ventas = new ArrayList();
+    private List dtoVentas = new ArrayList();
     private Buscador buscador = new Buscador();
 
     
     public boolean insertarVenta(NuevaVenta venta){
         
-        return ventas.add(venta);
+        return dtoVentas.add(venta);
         
     }
     
@@ -26,7 +26,7 @@ public class DAOVentasArrayList implements IDAOVenta{
         
         if(posicion != 1){
             
-            ventas.remove(posicion);
+            dtoVentas.remove(posicion);
             return true;
         
         } else {
@@ -44,9 +44,9 @@ public class DAOVentasArrayList implements IDAOVenta{
         boolean encontrado = false;
         
         //Buscar.
-        while(posicion <= ventas.size() && !encontrado){
+        while(posicion <= dtoVentas.size() && !encontrado){
             
-            NuevaVenta venta = (NuevaVenta)(ventas.get(posicion));
+            NuevaVenta venta = (NuevaVenta)(dtoVentas.get(posicion));
             
             if(venta.getIdVenta() == idVenta){
                 
@@ -78,7 +78,7 @@ public class DAOVentasArrayList implements IDAOVenta{
         //Este try se debe a que el buscador tira excepciones de ID no encontrada.
         try {
             
-            NuevaVenta ventaARegresar = buscador.buscarVentaPorId((NuevaVenta[])ventas.toArray(), idVenta);
+            NuevaVenta ventaARegresar = buscador.buscarVentaPorId((NuevaVenta[])dtoVentas.toArray(), idVenta);
             return ventaARegresar;
             
         } catch (IDNotFoundException ex) {

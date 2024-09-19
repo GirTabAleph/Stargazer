@@ -11,12 +11,12 @@ import java.util.List;
  */
 public class DAOProductoArrayList implements IDAOProducto{
     
-    private List productos = new ArrayList();
+    private List dtoProductos = new ArrayList();
 
     @Override
     public boolean agregarProducto(Producto producto) {
         
-        return productos.add(producto);
+        return dtoProductos.add(producto);
         
     }
 
@@ -31,7 +31,7 @@ public class DAOProductoArrayList implements IDAOProducto{
             
         } else {
             
-           productos.remove(posicion);
+           dtoProductos.remove(posicion);
            return true;
             
         }
@@ -50,7 +50,7 @@ public class DAOProductoArrayList implements IDAOProducto{
             
         } else {
             
-            productos.set(posicion, producto);
+            dtoProductos.set(posicion, producto);
             return true;
             
         }
@@ -69,7 +69,7 @@ public class DAOProductoArrayList implements IDAOProducto{
             
         } else {
             
-            producto = (Producto)productos.get(posicion);
+            producto = (Producto)dtoProductos.get(posicion);
             return producto;
             
         }
@@ -88,7 +88,7 @@ public class DAOProductoArrayList implements IDAOProducto{
             
         } else {
             
-            producto = (Producto)productos.get(posicion);
+            producto = (Producto)dtoProductos.get(posicion);
             return producto;
             
         }
@@ -98,9 +98,9 @@ public class DAOProductoArrayList implements IDAOProducto{
     @Override
     public Producto[] getAllProductos() {
         
-        Producto[] productosArray = new Producto[productos.size()];
+        Producto[] productosArray = new Producto[dtoProductos.size()];
         
-        productosArray = (Producto[])productos.toArray();
+        productosArray = (Producto[])dtoProductos.toArray();
         
         return productosArray;
         
@@ -112,9 +112,9 @@ public class DAOProductoArrayList implements IDAOProducto{
         boolean encontrado = false;
         
         //Buscar.
-        while(posicion <= productos.size() && !encontrado){
+        while(posicion <= dtoProductos.size() && !encontrado){
             
-            Producto producto = (Producto)(productos.get(posicion));
+            Producto producto = (Producto)(dtoProductos.get(posicion));
             
             if(producto.getId() == id){
                 
@@ -143,9 +143,9 @@ public class DAOProductoArrayList implements IDAOProducto{
         boolean encontrado = false;
         int posicion = 0;
         
-        while(posicion <= productos.size() && !encontrado){
+        while(posicion <= dtoProductos.size() && !encontrado){
             
-            Producto producto = (Producto)(productos.get(posicion));
+            Producto producto = (Producto)(dtoProductos.get(posicion));
             
             if(nombre.equals(producto.getNombre())){
                 

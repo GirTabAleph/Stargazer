@@ -6,7 +6,7 @@ import java.util.*;
 
 public class DAOProductoVendidoArrayList implements IDAOProductoVendido{
     
-    private List<ProductoVendido> listaProductos = new ArrayList<>();
+    private List<ProductoVendido> dtoListaProductos = new ArrayList<>();
     
     public DAOProductoVendidoArrayList(){
     
@@ -14,13 +14,13 @@ public class DAOProductoVendidoArrayList implements IDAOProductoVendido{
     
     public boolean insertarProductoVendido(ProductoVendido producto){
     
-        return listaProductos.add(producto);
+        return dtoListaProductos.add(producto);
         
     }
   
     public boolean borrarProductoVendido(int idProducto){
         
-        listaProductos.remove(idProducto); //Como borrar??
+        dtoListaProductos.remove(idProducto); //Como borrar??
         return true;
     
     }
