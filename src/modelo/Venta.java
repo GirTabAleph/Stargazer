@@ -2,6 +2,8 @@ package modelo;
 
 import java.time.LocalDateTime;
 
+//Tampoco es DTO, tiene más cosas que getters/setters.
+
 public class Venta {
     private Producto producto;
     private double costoUnitario;
