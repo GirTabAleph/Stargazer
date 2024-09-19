@@ -9,12 +9,12 @@ import java.util.Map;
 public class DAOFactura implements IDAOFactura {
     
     //Atributos.
-    private List dtoFacturas = new ArrayList();
+    private List facturas = new ArrayList();
 
     @Override
     public boolean insertarFactura(Factura factura) {
         
-        return dtoFacturas.add(factura);
+        return facturas.add(factura);
 
     }
     
@@ -28,7 +28,7 @@ public class DAOFactura implements IDAOFactura {
         
         if(posicion != -1){
             
-            facturaObtenida = (Factura)dtoFacturas.get(posicion);
+            facturaObtenida = (Factura)facturas.get(posicion);
             return facturaObtenida;
             
         } else {
@@ -52,7 +52,7 @@ public class DAOFactura implements IDAOFactura {
             
         } else {
             
-           dtoFacturas.remove(posicion);
+           facturas.remove(posicion);
            return true;
             
         }
@@ -73,7 +73,7 @@ public class DAOFactura implements IDAOFactura {
             
         } else {
             
-            dtoFacturas.set(posicion, factura);
+            facturas.set(posicion, factura);
             return true;
             
         }
@@ -86,9 +86,9 @@ public class DAOFactura implements IDAOFactura {
         boolean encontrado = false;
         
         //Buscar.
-        while(posicion <= dtoFacturas.size() && !encontrado){
+        while(posicion <= facturas.size() && !encontrado){
             
-            Factura factura = (Factura)(dtoFacturas.get(posicion));
+            Factura factura = (Factura)(facturas.get(posicion));
             
             if(factura.getNumeroFactura() == numFactura){
                 
