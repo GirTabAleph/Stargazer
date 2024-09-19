@@ -19,8 +19,9 @@ public class DAOProductoVendidoArrayList implements IDAOProductoVendido{
     }
   
     public boolean borrarProductoVendido(int idProducto){
-    
-        return listaProductos.remove(idProducto); //Como borrar??
+        
+        listaProductos.remove(idProducto); //Como borrar??
+        return true;
     
     }
     
