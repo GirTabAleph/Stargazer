@@ -2,6 +2,8 @@ package modelo;
 
 import java.util.Objects;
 
+//Para sorpresa de nadie, esta es DTO.
+
 public class Producto {
     private int id;
     private String nombre;

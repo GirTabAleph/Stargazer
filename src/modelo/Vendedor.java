@@ -1,11 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
 
 
 import javax.swing.JOptionPane;
+
+//Esta NO ES DTO. Tiene un método para crear vendedores
+//y eso hace que ya no sea DTO.
 
 public class Vendedor extends Persona {
     private String fechaContratacion;

@@ -4,6 +4,8 @@
  */
 package modelo;
 
+//Esta es una DTO.
+
 public class Persona {
     private String nombre;
     private String rfc;

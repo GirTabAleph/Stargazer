@@ -1,5 +1,7 @@
 package modelo;
 
+//Esta es DTO
+
 public class ProductoVendido {
     
     private int idProducto;
