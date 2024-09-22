@@ -20,6 +20,8 @@ public class Producto {
     private int stockMax;
     private int existencias;
     
+    private int cantidad;
+    
     //Constructor vacío.
     public Producto(){
         
@@ -43,6 +45,9 @@ public class Producto {
         this.stockMax = stockMax;
         this.existencias = existencias;
         
+        //Is this shit correct? I doubt it.
+        this.cantidad = cantidad;
+        
     }
 
     //Setters y Getters
@@ -56,6 +61,7 @@ public class Producto {
     public void setStockMin(int stockMin) { this.stockMin = stockMin; }
     public void setStockMax(int stockMax) { this.stockMax = stockMax; }
     public void setExistencias(int existencias) { this.existencias = existencias; }
+    public void setCantidad(int cantidad) {this.cantidad = cantidad; }
 
 
     public int getId() { return id; }
@@ -69,7 +75,7 @@ public class Producto {
     public int getStockMin() { return stockMin; }
     public int getStockMax() { return stockMax; }
     public int getExistencias() { return existencias; }
-    
+    public int getCantidad() { return cantidad; }
     
 
     @Override

@@ -43,7 +43,6 @@ public class Factura {
         double total = 0;
         for (Producto producto : productos) {
             double precioConDescuento = producto.getPrecio() - producto.getDescuento();
-            //Ya implementé getCantidad() en producto.
             total += precioConDescuento * producto.getCantidad();
         }
         return total + impuestoTotal;
