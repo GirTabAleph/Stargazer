@@ -1,7 +1,7 @@
 package modelo;
 
-import exceptions.IDNotFoundException;
 import exceptions.NameNotFoundException;
+import exceptions.ProductIDNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,13 +21,13 @@ public class DAOProductoArrayList implements IDAOProducto{
     }
 
     @Override
-    public boolean borrarProducto(int id) throws IDNotFoundException {
+    public boolean borrarProducto(int id) throws ProductIDNotFoundException{
         
         int posicion = buscarPorId(id);
         
         if(posicion == -1){
             
-            throw new IDNotFoundException(id);
+            throw new ProductIDNotFoundException(id);
             
         } else {
             
@@ -39,13 +39,13 @@ public class DAOProductoArrayList implements IDAOProducto{
     }
 
     @Override
-    public boolean modificarProducto(int id, Producto producto) throws IDNotFoundException {
+    public boolean modificarProducto(int id, Producto producto) throws ProductIDNotFoundException {
         
         int posicion = buscarPorId(id);
         
         if(posicion == -1){
             
-            throw new IDNotFoundException(id);
+            throw new ProductIDNotFoundException(id);
             
             
         } else {
@@ -58,14 +58,14 @@ public class DAOProductoArrayList implements IDAOProducto{
     }
 
     @Override
-    public Producto getProductoById(int id) throws IDNotFoundException {
+    public Producto getProductoById(int id) throws ProductIDNotFoundException {
         
         int posicion = buscarPorId(id);
         Producto producto = null;
         
         if(posicion == -1){
             
-            throw new IDNotFoundException(id);
+            throw new ProductIDNotFoundException(id);
             
         } else {
             
@@ -96,13 +96,9 @@ public class DAOProductoArrayList implements IDAOProducto{
     }
 
     @Override
-    public Producto[] getAllProductos() {
+    public List getAllProductos() {
         
-        Producto[] productosArray = new Producto[productos.size()];
-        
-        productosArray = (Producto[])productos.toArray();
-        
-        return productosArray;
+        return productos;
         
     }
     
@@ -112,7 +108,7 @@ public class DAOProductoArrayList implements IDAOProducto{
         boolean encontrado = false;
         
         //Buscar.
-        while(posicion <= productos.size() && !encontrado){
+        while(posicion < productos.size() && !encontrado){
             
             Producto producto = (Producto)(productos.get(posicion));
             
@@ -120,12 +116,15 @@ public class DAOProductoArrayList implements IDAOProducto{
                 
                 encontrado = true;
             
-            }//Fin if
-            
-            posicion++;
-        
+            } else {
+               
+                //Incremento si no se encontró.
+                posicion++;
+                
+            }
+           
         }//Fin while       
-        
+                
         if(encontrado){
         
             return posicion;

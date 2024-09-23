@@ -1,8 +1,8 @@
-
 package modelo;
 
-import exceptions.IDNotFoundException;
 import exceptions.NameNotFoundException;
+import exceptions.ProductIDNotFoundException;
+import java.util.List;
 
 /**
  *
@@ -14,11 +14,11 @@ public interface IDAOProducto {
     //get producto por nombre y devolver el objeto producto, get productos para obtener todos
     //los productos (arreglo de todos los productos)
     public boolean agregarProducto(Producto producto);
-    public boolean borrarProducto(int id) throws IDNotFoundException;
-    public boolean modificarProducto(int id, Producto producto) throws IDNotFoundException;
-    public Producto getProductoById(int id) throws IDNotFoundException;
+    public boolean borrarProducto(int id) throws ProductIDNotFoundException;
+    public boolean modificarProducto(int id, Producto producto) throws ProductIDNotFoundException;
+    public Producto getProductoById(int id) throws ProductIDNotFoundException;
     public Producto getProductoByName(String nombre) throws NameNotFoundException;
-    public Producto[] getAllProductos(); 
+    public List getAllProductos(); 
     
     
 }

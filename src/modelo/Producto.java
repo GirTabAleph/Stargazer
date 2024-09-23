@@ -26,11 +26,19 @@ public class Producto {
     }
     
     // Constructor
-    public Producto(String nombre, String ubicacion, double precio, double costo,
+    public Producto(int id, String nombre, String ubicacion, double precio, double costo,
                     double descuento, String categoria, int proveedor, int stockMin,
                     int stockMax, int existencias) {
         
-        this.id = incrementarId();
+        if(id != 0){
+           
+            this.id = incrementarId();
+            
+        } else {
+            
+            this.id = id;
+            
+        }
         
         this.nombre = nombre;
         this.ubicacion = ubicacion;
@@ -116,7 +124,7 @@ public class Producto {
     
     private static int incrementarId(){
         
-        return seqId++;
+        return ++seqId;
         
     }
     
