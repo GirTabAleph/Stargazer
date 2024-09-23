@@ -11,12 +11,13 @@ public class Factura {
     private String telefonoCliente;
     private int numeroFactura;
     private LocalDate fechaEmitida;
-    private List<Producto> productos;
+    private List<ProductoVendido> productosVendidos;
     private double impuestoTotal;
     private double costoTotal;
 
-    public Factura(Cliente cliente, int numeroFactura, LocalDate fechaEmitida, List<Producto> productos) {
-        if (cliente == null || productos == null || productos.isEmpty()) {
+    public Factura(Cliente cliente, int numeroFactura, LocalDate fechaEmitida, 
+            List<ProductoVendido> productosVendidos) {
+        if (cliente == null || productosVendidos == null || productosVendidos.isEmpty()) {
             throw new IllegalArgumentException("Cliente y productos no pueden ser nulos o vacíos.");
         }
         this.rfcCliente = cliente.getRfc();
@@ -25,7 +26,7 @@ public class Factura {
         this.telefonoCliente = cliente.getTelefono();
         this.numeroFactura = numeroFactura;
         this.fechaEmitida = fechaEmitida;
-        this.productos = productos;
+        this.productosVendidos = productosVendidos;
         this.impuestoTotal = calcularImpuestoTotal();
         this.costoTotal = calcularCostoTotal();
         
@@ -33,7 +34,7 @@ public class Factura {
 
     private double calcularImpuestoTotal() {
         double totalImpuesto = 0;
-        for (Producto producto : productos) {
+        for (ProductoVendido producto : productosVendidos) {
             totalImpuesto += producto.getPrecio() * 0.16; // 16% de IVA
         }
         return totalImpuesto;
@@ -41,7 +42,7 @@ public class Factura {
 
     private double calcularCostoTotal() {
         double total = 0;
-        for (Producto producto : productos) {
+        for (ProductoVendido producto : productosVendidos) {
             double precioConDescuento = producto.getPrecio() - producto.getDescuento();
             total += precioConDescuento * producto.getCantidad();
         }
@@ -58,7 +59,7 @@ public class Factura {
         factura.append(String.format("Teléfono: %s\n", telefonoCliente));
         factura.append("\nProductos:\n");
 
-        for (Producto producto : productos) {
+        for (ProductoVendido producto : productosVendidos) {
             factura.append(String.format("- %s: $%.2f (Descuento: $%.2f)\n",
                     producto.getNombre(), producto.getPrecio(), producto.getDescuento()));
         }

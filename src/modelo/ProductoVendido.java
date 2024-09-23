@@ -7,11 +7,15 @@ public class ProductoVendido {
     private int idProducto;
     private float precio;
     private int cantidad;
+    private double descuento;
+    private String nombre;
+    
 
-    public ProductoVendido(int idProducto, float precio, int cantidad) {
+    public ProductoVendido(int idProducto, float precio, int cantidad, String nombre) {
         this.idProducto = idProducto;
         this.precio = precio;
         this.cantidad = cantidad;
+        this.nombre = nombre;
     }
 
     public int getIdProducto() {
@@ -37,7 +41,23 @@ public class ProductoVendido {
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
+    
+    public double getDescuento() {
+        return descuento;
+    }
 
+    public void setDescuento(double descuento) {
+        this.descuento = descuento;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 7;
@@ -64,7 +84,5 @@ public class ProductoVendido {
     public String toString() {
         return "ProductoVendido{" + "idProducto=" + idProducto + ", precio=" + precio + ", cantidad=" + cantidad + '}';
     }
-    
-    
-    
+
 }
