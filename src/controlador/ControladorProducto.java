@@ -1,6 +1,7 @@
 package controlador;
 
 import exceptions.IDNotFoundException;
+import exceptions.ProductIDNotFoundException;
 import modelo.DAOProductoArrayList;
 import modelo.IDAOProducto;
 import modelo.Producto;
@@ -32,7 +33,7 @@ public class ControladorProducto {
                 switch(opcion){
 
                     case 1:
-                        producto = iu.leerProducto();
+                        producto = iu.leerProducto(0);
                         if(daoProducto.agregarProducto(producto)){
 
                             iu.mensaje("Producto agregado correctamente.");
@@ -58,22 +59,56 @@ public class ControladorProducto {
                         }
                         
                         break;
-                    
-                    case 3:
+                        
+                    case 3: 
+                        
+                        idProducto = iu.leerIdProducto("modificar");
+                        producto = iu.leerProducto(idProducto);
+                        
+                        if(daoProducto.modificarProducto(idProducto, producto)){
+                            
+                            iu.mensaje("Producto " + producto + " modificado correctamente.");
+                            
+                        } else {
+                            
+                            iu.mensaje("Alguna otra cosa salió mal.");
+                            
+                        }
+                        
+                        break;
+                        
+                    case 4:
                         
                         iu.mensaje("Listado de todos los productos.");
-                        Producto productos[] = daoProducto.getAllProductos();
+                        iu.mostrarListaProductos(daoProducto.getAllProductos() );
+                        break;
+                        
+                    default:
+                        
+                        iu.mensaje("Opción no reconocida. Intente nuevamente.");
                         break;
 
                 }
                 
-            }catch(IDNotFoundException ex){
+            }catch(ProductIDNotFoundException ex){
                 
                 System.out.println(ex.getMessage());
+            
+                /*
+            } catch(IDNotFoundException ex2){
                 
+                System.out.println(ex2.getMessage());
+             */   
             }
             
         } while(opcion != 0);
+        
+    }
+    
+    public static void main(String args[]){
+        
+        //Crear el objeto de control.
+        new ControladorProducto();
         
     }
     
