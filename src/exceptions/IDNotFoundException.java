@@ -7,11 +7,11 @@ package exceptions;
  */
 public class IDNotFoundException extends Exception{
     
-    private int id;
+    protected int id;
     
     public IDNotFoundException(int id){
         
-        super("Error: ID" + id + " no encontrado.");
+        super("Error: ID " + id + " no encontrado.");
         this.id = id;
         
     }
@@ -21,5 +21,7 @@ public class IDNotFoundException extends Exception{
         super(msj);
         
     }
+    
+    
     
 }
