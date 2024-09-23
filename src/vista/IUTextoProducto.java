@@ -1,5 +1,7 @@
 package vista;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import modelo.Producto;
 
@@ -12,11 +14,10 @@ public class IUTextoProducto implements IUProducto{
    private Scanner entrada = new Scanner(System.in);
 
     @Override
-    public Producto leerProducto() {
+    public Producto leerProducto(int id) {
         
-        System.out.print("Ingrese los siguientes datos del producto: \nID: ");
-        int id = entrada.nextInt();
-        
+        System.out.print("Ingrese los siguientes datos del producto:\n");
+        entrada.nextLine();
         System.out.print("Nombre: ");
         String nombre = entrada.nextLine();
         System.out.print("Ubicación: ");
@@ -29,16 +30,21 @@ public class IUTextoProducto implements IUProducto{
         double descuento = entrada.nextDouble();
         System.out.print("Categoría: ");
         String categoria = entrada.nextLine();
+        entrada.nextLine();
         System.out.print("ID del proveedor: ");
         int proveedor = entrada.nextInt();
+        entrada.nextLine();
         System.out.print("Stock mínimo: ");
         int stockMin = entrada.nextInt();
+        entrada.nextLine();
         System.out.print("Stock máximo: ");
         int stockMax = entrada.nextInt();
+        entrada.nextLine();
         System.out.print("Existencias: ");
         int existencias = entrada.nextInt();
+        entrada.nextLine();
         
-        return new Producto(nombre, ubicacion, precio, costo,
+        return new Producto(id, nombre, ubicacion, precio, costo,
             descuento, categoria, proveedor, stockMin, stockMax, existencias);
     }
 
@@ -71,13 +77,13 @@ public class IUTextoProducto implements IUProducto{
     }
 
     @Override
-    public void mostrarListaProductos(Producto[] productos) {
+    public void mostrarListaProductos(List productos) {
         
         System.out.println("Listado de todos los productos.");
         System.out.println("ID   Nombre\t Ubicación\tPrecio\tCosto\tDescuento\tCategoría\tProveedor"
                 + "\tStock mínimo\tStock máximo\tExistencias");
         
-        for(Producto producto : productos){
+        for(Producto producto : (ArrayList<Producto>)productos){
             
             System.out.println(producto.getId() + " " 
                     + producto.getNombre() + " " 
@@ -95,13 +101,13 @@ public class IUTextoProducto implements IUProducto{
         }
         
     }
-
+       
     @Override
     public int menuProductos() {
         
-        System.out.print("Opciones: 1.Agregar un producto\n2.Borrar un producto"
-                + "\n3.Mostrar todos los productos\n0.Salir");
-        System.out.println("Seleccione una opción: ");
+        System.out.print("Subsistema de productos\n\n1.Agregar un producto\n2.Borrar un producto"
+                + "\n3.Modificar un producto\n4.Mostrar los productos\n0.Salir");
+        System.out.print("\n\nSeleccione una opción: ");
         
         return entrada.nextInt();
         

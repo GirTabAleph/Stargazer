@@ -1,5 +1,6 @@
 package vista;
 
+import java.util.List;
 import modelo.Producto;
 
 /**
@@ -8,11 +9,11 @@ import modelo.Producto;
  */
 public interface IUProducto {
     
-    public Producto leerProducto();
+    public Producto leerProducto(int id);
     public void mostrarProducto(Producto producto);
     public int leerIdProducto(String texto);
     public String leerNombreProducto(String texto);
-    public void mostrarListaProductos(Producto[] productos);
+    public void mostrarListaProductos(List productos);
     public int menuProductos();
     public void mensaje(String cadena);
     
