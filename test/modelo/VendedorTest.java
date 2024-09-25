@@ -14,7 +14,7 @@ public class VendedorTest {
 
     @Before
     public void setUp() {
-        // Inicializamos un vendedor antes de cada prueba
+ 
         vendedor = new Vendedor("Juan Perez", "RFC123", "Av. Siempre Viva 123", 
                 "5551234567", "Zona Norte", "2024-01-15"
                 , 10.5, 1001);
