@@ -9,12 +9,29 @@ package implementacion;
  * @author SEBAS
  */
 public class Implementacion {
+    
+    
+    private int num;
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        
+        int numero;
         // TODO code application logic here
+        
+    }
+
+    public Implementacion() {
     }
     
 }
