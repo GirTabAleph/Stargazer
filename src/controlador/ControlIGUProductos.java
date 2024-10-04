@@ -14,9 +14,9 @@ import vista.IGUProductos;
 import vista.IUTextoProducto;
 
 /**
- *
- * @author Diego Ortega
+ * @author Israel
  */
+
 public class ControlIGUProductos implements ActionListener{
     
     private IGUProductos igu;
