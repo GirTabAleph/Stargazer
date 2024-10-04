@@ -8,10 +8,6 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import modelo.Producto;
 
-/**
- *
- * @author Diego Ortega
- */
 public class IGUProductos extends JInternalFrame{
     
     private JLabel[] etiquetas = {
@@ -61,7 +57,14 @@ public class IGUProductos extends JInternalFrame{
         setSize(590, 390);
         add(getPanelDatos(), BorderLayout.CENTER);
         
-        add(getPanelBotones(), BorderLayout.SOUTH);
+        add(getPanelBotones(), BorderLayout.EAST);
+        
+        add(getToolBar(), BorderLayout.SOUTH);
+        
+        desactivarID();
+        
+        activarCampos();
+        
                 
     }
     
@@ -85,12 +88,12 @@ public class IGUProductos extends JInternalFrame{
     public JPanel getPanelBotones(){
         
         JPanel panelBotones = new JPanel();
-        Box cajaBotones = Box.createHorizontalBox();
-        cajaBotones.add(Box.createHorizontalStrut(15));
+        Box cajaBotones = Box.createVerticalBox();
+        cajaBotones.add(Box.createVerticalStrut(15));
         cajaBotones.add(btnAceptar);
-        cajaBotones.add(Box.createHorizontalStrut(10));
+        cajaBotones.add(Box.createVerticalStrut(10));
         cajaBotones.add(btnCancelar);
-        cajaBotones.add(Box.createHorizontalStrut(10));
+        cajaBotones.add(Box.createVerticalStrut(10));
         cajaBotones.add(btnLimpiar);
         
         panelBotones.setBorder(new LineBorder(Color.BLUE));
@@ -104,15 +107,36 @@ public class IGUProductos extends JInternalFrame{
         
     }
     
-    public Producto getProducto(){
+    public void cambiarAccion(String texto){
+        
+        btnAceptar.setText(texto);
+        btnAceptar.setActionCommand(texto);
+    
+    }
+    
+    public int getId(){
+    
+        return Integer.parseInt(campos[0].getText());
+    }
+    
+    
+    public Producto getProducto(boolean cambiarId){
         
         /*
         int id, String nombre, String ubicacion, double precio, double costo,
                     double descuento, String categoria, int proveedor, int stockMin,
                     int stockMax, int existencias
         */
+        int id;
+        if(cambiarId ){
         
-        return new Producto(Integer.parseInt(campos[0].getText()),
+            id = 1;
+            
+        }else{
+            
+            id = Integer.parseInt(campos[0].getText()) ;
+        }
+        return new Producto(id,
                             campos[1].getText(),
                             campos[2].getText(),
                             Double.parseDouble(campos[3].getText()),
@@ -127,4 +151,86 @@ public class IGUProductos extends JInternalFrame{
         
     }
     
+    public void limpiarCampos(){
+        
+        
+        for(JTextField campo : campos){
+            
+            campo.setText("");
+    
+        }
+        
+    }
+   
+    public JToolBar getToolBar(){
+        
+        JToolBar toolBar = new JToolBar();
+        JButton btNuevo = new JButton("+"), btBorrar = new JButton("-"), btEditar = new JButton("E"); 
+        
+        btNuevo.addActionListener(controlProductos);
+        btBorrar.addActionListener(controlProductos);
+        btEditar.addActionListener(controlProductos);
+        
+        btNuevo.setActionCommand("Nuevo");
+        btBorrar.setActionCommand("Borrar");
+        btEditar.setActionCommand("Editar");
+        
+        toolBar.add(btNuevo);
+        toolBar.add(btBorrar);
+        toolBar.add(btEditar);
+        
+        
+        
+        return toolBar;
+        
+    }
+    
+    public void activarID(){
+        
+        campos[0].setEnabled(true);
+        
+    }
+    
+    public void activarCampos(){
+        
+        for(int campo = 1; campo < campos.length ; campo++){
+            
+            campos[campo].setEnabled(true);
+            
+        }
+    }
+    
+    public void desactivarID(){
+        
+        campos[0].setEnabled(false);
+    }
+    
+    public void desactivarCampos(){
+        
+        for(int campo = 1; campo < campos.length ; campo++ ){
+        
+        campos[campo].setEnabled(false);
+        }
+        
+    }
+    
+    /*
+        int id, String nombre, String ubicacion, double precio, double costo,
+                    double descuento, String categoria, int proveedor, int stockMin,
+                    int stockMax, int existencias
+        */
+    
+    public void setProducto(Producto producto){
+        
+        campos[1].setText(producto.getNombre());
+        campos[2].setText(producto.getUbicacion());
+        campos[3].setText(String.valueOf(producto.getPrecio()));
+        campos[4].setText(String.valueOf(producto.getCosto()));
+        campos[5].setText(String.valueOf(producto.getDescuento()));
+        campos[6].setText(producto.getCategoria());
+        campos[7].setText(String.valueOf(producto.getProveedor()));
+        campos[8].setText(String.valueOf(producto.getStockMin()));
+        campos[9].setText(String.valueOf(producto.getStockMax()));
+        campos[10].setText(String.valueOf(producto.getExistencias()));
+    }
 }
