@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import vista.IGUMenu;
 import vista.IGUProductos;
+import vista.IGUVendedor;
 
 /**
  *
@@ -34,10 +35,17 @@ public class ControlIGUMenu implements ActionListener{
                 
             case "Productos":
                 
-                IGUProductos ventana = new IGUProductos();
-                ventana.setVisible(true);
-                igu.getEscritorio().add(ventana);
+                IGUProductos ventanaProductos = new IGUProductos();
+                ventanaProductos.setVisible(true);
+                igu.getEscritorio().add(ventanaProductos);
                 
+                break;
+            
+            case "Vendedor":
+                
+                IGUVendedor ventanaVendedor = new IGUVendedor();
+                ventanaVendedor.setVisible(true);
+                igu.getEscritorio().add(ventanaVendedor);
                 break;
                 
             default:
