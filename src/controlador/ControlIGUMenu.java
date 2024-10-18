@@ -38,7 +38,6 @@ public class ControlIGUMenu implements ActionListener{
                 IGUProductos ventanaProductos = new IGUProductos();
                 ventanaProductos.setVisible(true);
                 igu.getEscritorio().add(ventanaProductos);
-                
                 break;
             
             case "Vendedor":
@@ -50,6 +49,7 @@ public class ControlIGUMenu implements ActionListener{
                 
             default:
                 
+                //Cabrón quién puso esto? Qué hace?
                 assert(true);
                 break;
         }

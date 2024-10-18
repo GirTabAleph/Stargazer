@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import modelo.DAOProductoArrayList;
+import modelo.DAOProductoHashMap;
 import modelo.IDAOProducto;
 import modelo.Producto;
 import vista.IGUProductos;
@@ -20,7 +21,7 @@ import vista.IUTextoProducto;
 public class ControlIGUProductos implements ActionListener{
     
     private IGUProductos igu;
-    private IDAOProducto productos = new DAOProductoArrayList();
+    private IDAOProducto productos = new DAOProductoHashMap();
     
     public ControlIGUProductos(IGUProductos igu){
         
@@ -41,7 +42,7 @@ public class ControlIGUProductos implements ActionListener{
                 case "Aceptar":
                     productos.agregarProducto(igu.getProducto(true));
                     IUTextoProducto texto = new IUTextoProducto(); 
-                    texto.mostrarListaProductos(productos.getAllProductos());
+                    igu.activarTabla();
                     break;
 
                 case "Eliminar":
@@ -49,7 +50,7 @@ public class ControlIGUProductos implements ActionListener{
                     productos.borrarProducto(igu.getId());
 
                     IUTextoProducto texto1 = new IUTextoProducto(); 
-                    texto1.mostrarListaProductos(productos.getAllProductos());
+                    
                     break;    
 
                 case "Cancelar":
@@ -126,6 +127,6 @@ public class ControlIGUProductos implements ActionListener{
         productos.modificarProducto(igu.getId(), igu.getProducto(false));
         
         IUTextoProducto texto1 = new IUTextoProducto(); 
-        texto1.mostrarListaProductos(productos.getAllProductos());
+        
     }
 }
