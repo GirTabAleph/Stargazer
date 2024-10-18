@@ -96,9 +96,32 @@ public class DAOProductoArrayList implements IDAOProducto{
     }
 
     @Override
-    public List getAllProductos() {
+    public Object[][] getAllProductos() {
         
-        return productos;
+        Object[][] arregloProductos = new Producto[productos.size()][11];
+        
+        int pos = 0;
+        
+        for(Producto producto : (ArrayList<Producto>)productos){
+   
+            
+            arregloProductos[pos][0] = producto.getId();
+            arregloProductos[pos][1] = producto.getNombre();
+            arregloProductos[pos][2] = producto.getUbicacion();
+            arregloProductos[pos][3] = producto.getPrecio();
+            arregloProductos[pos][4] = producto.getCosto();
+            arregloProductos[pos][5] = producto.getDescuento();
+            arregloProductos[pos][6] = producto.getCategoria();
+            arregloProductos[pos][7] = producto.getProveedor();
+            arregloProductos[pos][8] = producto.getStockMin();
+            arregloProductos[pos][9] = producto.getStockMax();
+            arregloProductos[pos][10] = producto.getExistencias();
+            
+            pos++;
+            
+        }
+        
+        return arregloProductos;
         
     }
     
