@@ -18,7 +18,7 @@ public interface IDAOProducto {
     public boolean modificarProducto(int id, Producto producto) throws ProductIDNotFoundException;
     public Producto getProductoById(int id) throws ProductIDNotFoundException;
     public Producto getProductoByName(String nombre) throws NameNotFoundException;
-    public List getAllProductos(); 
+    public Object[][] getAllProductos(); 
     
     
 }
