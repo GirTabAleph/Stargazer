@@ -4,9 +4,13 @@ import controlador.ControlIGUProductos;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.Image;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
 import modelo.Producto;
+import modelo.DAOProductoArrayList;
 
 public class IGUProductos extends JInternalFrame{
     
@@ -46,6 +50,11 @@ public class IGUProductos extends JInternalFrame{
             btnCancelar = new JButton("Cancelar"),
             btnLimpiar = new JButton("Limpiar campos");
     
+    private JTable tabla;
+    DefaultTableModel modeloTabla;
+    
+    private DAOProductoArrayList modelo = new DAOProductoArrayList();
+    
     //Definir control apra esta ventana.
     private ControlIGUProductos controlProductos = new ControlIGUProductos(this);
     
@@ -54,12 +63,13 @@ public class IGUProductos extends JInternalFrame{
         
         //redimensionable
         super("Catálogo de productos", true, true, true, true);
-        setSize(590, 390);
-        add(getPanelDatos(), BorderLayout.CENTER);
+        setSize(690, 590);
         
-        add(getPanelBotones(), BorderLayout.EAST);
+        add(getPanelEdicion(), BorderLayout.NORTH);
         
-        add(getToolBar(), BorderLayout.SOUTH);
+        add(getToolBar(), BorderLayout.CENTER);
+        
+        add(getPanelTabla(), BorderLayout.SOUTH);
         
         desactivarID();
         
@@ -104,6 +114,20 @@ public class IGUProductos extends JInternalFrame{
         btnLimpiar.addActionListener(controlProductos);
         
         return panelBotones;
+        
+    }
+    
+    public JPanel getPanelEdicion(){
+        
+        JPanel panelEdicion = new JPanel();
+        panelEdicion.setBorder(new TitledBorder(null, "Edición producto", 
+            TitledBorder.CENTER, TitledBorder.TOP, null, null));
+        
+        panelEdicion.setLayout(new BorderLayout() );
+        panelEdicion.add(getPanelDatos(), BorderLayout.CENTER);
+        panelEdicion.add(getPanelBotones(), BorderLayout.EAST);
+        
+        return panelEdicion;
         
     }
     
@@ -165,11 +189,19 @@ public class IGUProductos extends JInternalFrame{
     public JToolBar getToolBar(){
         
         JToolBar toolBar = new JToolBar();
-        JButton btNuevo = new JButton("+"), btBorrar = new JButton("-"), btEditar = new JButton("E"); 
+        JButton btNuevo = new JButton(), btBorrar = new JButton("-"), btEditar = new JButton("E"); 
         
         btNuevo.addActionListener(controlProductos);
         btBorrar.addActionListener(controlProductos);
         btEditar.addActionListener(controlProductos);
+        
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/iconos/plus.png")); // load the image to a imageIcon
+        Image image = imageIcon.getImage(); // transform it 
+        Image newimg = image.getScaledInstance(30, 30,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        imageIcon = new ImageIcon(newimg);  // transform it back
+
+        
+        btNuevo.setIcon(imageIcon);
         
         btNuevo.setActionCommand("Nuevo");
         btBorrar.setActionCommand("Borrar");
@@ -233,4 +265,56 @@ public class IGUProductos extends JInternalFrame{
         campos[9].setText(String.valueOf(producto.getStockMax()));
         campos[10].setText(String.valueOf(producto.getExistencias()));
     }
+    
+    public JPanel getPanelTabla(){
+        
+        JPanel panelTabla = new JPanel();
+        
+        panelTabla.setBorder(new TitledBorder(null, "Lista de productos", 
+                TitledBorder.CENTER, TitledBorder.TOP, null, null) );
+        
+        tabla = new JTable();
+        
+        JScrollPane scroll = new JScrollPane();
+        scroll.setViewportView(tabla);
+        panelTabla.add(scroll);
+        
+        setTablaProductos();
+        
+        return panelTabla;
+        
+    }
+    
+    public void setTablaProductos(){
+        
+        String [] titulos = {"ID", "Nombre", "Ubicación", "Precio", "Costo", 
+            "Descuento", "Categpría", "Proveedor", "Stock mínimo", "Stock máximo",
+            "Existencias"};
+        
+        modeloTabla = new DefaultTableModel(){
+                
+                @Override
+                public boolean isCellEditable(int renglon, int columna){
+                    
+                    return false;
+                    
+                }
+            
+            };
+        
+        //Mover esto eventualmente.
+        Object[][] datos = modelo.getAllProductos();
+        modeloTabla.setDataVector(datos, titulos);
+        
+        tabla.setModel(modeloTabla);
+        tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+    }
+    
+    public void activarTabla(){
+                
+        modeloTabla.fireTableDataChanged();
+        
+    }
+    
 }

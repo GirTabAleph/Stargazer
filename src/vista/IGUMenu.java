@@ -29,7 +29,7 @@ public class IGUMenu extends JFrame{
         
         setJMenuBar(getBarraMenu());
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(900, 700);
         setLocationRelativeTo(null);
         
         setVisible(true);
