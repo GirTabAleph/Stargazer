@@ -14,6 +14,8 @@ import modelo.DAOProductoArrayList;
 
 public class IGUProductos extends JInternalFrame{
     
+    private static IGUProductos singleton;
+    
     private JLabel[] etiquetas = {
     
         new JLabel("ID: "),
@@ -59,7 +61,7 @@ public class IGUProductos extends JInternalFrame{
     private ControlIGUProductos controlProductos = new ControlIGUProductos(this);
     
     //Construir ventana en el constructor.
-    public IGUProductos(){
+    private IGUProductos(){
         
         //redimensionable
         super("Catálogo de productos", true, true, true, true);
@@ -314,6 +316,18 @@ public class IGUProductos extends JInternalFrame{
     public void activarTabla(){
                 
         modeloTabla.fireTableDataChanged();
+        
+    }
+    
+    public static IGUProductos getInstance(){
+        
+        if(singleton == null){
+            
+            singleton = new IGUProductos();
+            
+        }
+        
+        return singleton;
         
     }
     
