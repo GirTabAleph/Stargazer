@@ -1,7 +1,13 @@
 package vista;
 
 import controlador.ControlIGUMenu;
+import java.util.Calendar;
 import javax.swing.*;
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+import modelo.Cliente;
+import modelo.ClienteFactory;
+import modelo.Vendedor;
+import modelo.VendedorFactory;
 
 /**
  *
@@ -61,6 +67,20 @@ public class IGUMenu extends JFrame{
     }
     
     public static void main(String args[]){
+        
+        VendedorFactory factoryVendedor = new VendedorFactory();
+        ClienteFactory factoryCliente = new ClienteFactory();
+        
+        //(idPersona, nombre, rfc, telefono, domicilio, idZona, fecha, porcentaje
+        
+        Vendedor v = factoryVendedor.crearPersona(1, "Juanjo", "CCC123CCC123C", "5526316817", "Atrás de la FCA",
+                1, Calendar.getInstance().getTime(), 10.0);
+        
+        Cliente c = factoryCliente.crearPersona(2, "Ernesto", "123DDD123DDD1", "5515444175", "En frente de la FCA",
+                2, Calendar.getInstance().getTime(), null);
+        
+        System.out.println(v.toString());
+        System.out.println(c.toString());
         
         new IGUMenu();
         
