@@ -1,52 +1,47 @@
 package modelo;
 
 
+import java.util.Date;
 import javax.swing.JOptionPane;
 
 //Esta NO ES DTO. Tiene un método para crear vendedores
 //y eso hace que ya no sea DTO.
 
 public class Vendedor extends Persona {
-    private String fechaContratacion;
+    
+    private Date fechaContratacion;
     private double porcentajeComisiones;
-    private int idVendedor;
 
     // Constructor
-
-    public Vendedor(String nombre, String rfc, String domicilio, String telefono, String zona) {
+    public Vendedor(int idPersona, String nombre, String rfc, String domicilio, String telefono, int idZona) {
         
-        super(nombre, rfc, domicilio, telefono, zona);
+        super(idPersona, nombre, rfc, domicilio, telefono, idZona);
 
     }
     
     
-    public Vendedor(String nombre, String rfc, String domicilio, String telefono, 
-            String zona, String fechaContratacion, double porcentajeComisiones, 
-            int idVendedor) {
+    public Vendedor(int idPersona, String nombre, String rfc, String domicilio, String telefono, 
+            int idZona, Date fechaContratacion, double porcentajeComisiones) {
         
-        super(nombre, rfc, domicilio, telefono, zona);
+        super(idPersona, nombre, rfc, domicilio, telefono, idZona);
         
         this.fechaContratacion = fechaContratacion;
         this.porcentajeComisiones = porcentajeComisiones;
-        this.idVendedor = idVendedor;
+        
     }
 
     //Setters
 
-    public void setFechaContratacion(String fechaContratacion) {
+    public void setFechaContratacion(Date fechaContratacion) {
         this.fechaContratacion = fechaContratacion;
     }
 
     public void setPorcentajeComisiones(double porcentajeComisiones) {
         this.porcentajeComisiones = porcentajeComisiones;
     }
-    
-    public void setIdVendedor(int idVendedor){
-        this.idVendedor = idVendedor;
-    }
 
 
-    public String getFechaContratacion() {
+    public Date getFechaContratacion() {
         return fechaContratacion;
     }
 
@@ -54,22 +49,27 @@ public class Vendedor extends Persona {
         return porcentajeComisiones;
     }
     
-    public int getIdVendedor(){
-        return idVendedor;
-    }
 
     // Método para capturar datos del vendedor
     public static Vendedor crearVendedor() {
+        
+        int idPersona = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el identificador (ID) del vendedor:"));
         String nombre = JOptionPane.showInputDialog("Ingrese el nombre del vendedor:");
         String rfc = JOptionPane.showInputDialog("Ingrese el RFC del vendedor:");
         String domicilio = JOptionPane.showInputDialog("Ingrese el domicilio del vendedor:");
         String telefono = JOptionPane.showInputDialog("Ingrese el teléfono del vendedor:");
-        String zona = JOptionPane.showInputDialog("Ingrese la zona de entrega del vendedor:");
-        String fechaContratacion = JOptionPane.showInputDialog("Ingrese la fecha de contratación del vendedor:");
+        int idZona = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el ID de la zona:"));
+        Date fechaContratacion = null;//JOptionPane.showInputDialog("Ingrese la fecha de contratación del vendedor:");
         double porcentajeComisiones = Double.parseDouble(JOptionPane.showInputDialog("Ingrese el porcentaje de comisiones del vendedor:"));
-        int idVendedor = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el identificador (ID) del vendedor:"));
+        
 
-        return new Vendedor(nombre, rfc, domicilio, telefono, zona, fechaContratacion, porcentajeComisiones, idVendedor);
+        return new Vendedor(idPersona, nombre, rfc, domicilio, telefono, idZona, fechaContratacion, porcentajeComisiones);
     }
-}
 
+    @Override
+    public String toString() {
+        return super.toString() + "Vendedor{" + "fechaContratacion=" + fechaContratacion + ", porcentajeComisiones=" + porcentajeComisiones + '}';
+    }
+    
+    
+}
