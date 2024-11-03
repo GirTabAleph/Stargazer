@@ -12,12 +12,12 @@ public class Persona {
     
 
     // Constructor
-    protected Persona(int idPersona, String nombre, String rfc, String domicilio, String telefono, int idZona) {
+    protected Persona(int idPersona, String nombre, String rfc, String telefono, String domicilio, int idZona) {
         this.idPersona = idPersona;
         this.nombre = nombre;
         this.rfc = rfc;
-        this.domicilio = domicilio;
         this.telefono = telefono;
+        this.domicilio = domicilio;
         this.idZona = idZona;
     }
 
@@ -72,7 +72,9 @@ public class Persona {
 
     @Override
     public String toString() {
-        return "Persona{" + "idPersona=" + idPersona + ", nombre=" + nombre + ", rfc=" + rfc + ", domicilio=" + domicilio + ", telefono=" + telefono + ", idZona=" + idZona + '}';
+        return "Persona: " + "idPersona = " + idPersona + "\nnombre = " + nombre + 
+                "\nrfc = " + rfc + "\ndomicilio = " + domicilio + "\ntelefono = " + telefono 
+                + "\nidZona = " + idZona + "\n";
     }
     
     
