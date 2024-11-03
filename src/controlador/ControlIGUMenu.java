@@ -35,7 +35,8 @@ public class ControlIGUMenu implements ActionListener{
                 
             case "Productos":
                 
-                IGUProductos ventanaProductos = new IGUProductos();
+                //Llamada al singleton.
+                IGUProductos ventanaProductos = IGUProductos.getInstance();
                 ventanaProductos.setVisible(true);
                 igu.getEscritorio().add(ventanaProductos);
                 break;
