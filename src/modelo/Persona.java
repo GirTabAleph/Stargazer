@@ -1,25 +1,24 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
 
 //Esta es una DTO.
 
 public class Persona {
+    private int idPersona;
     private String nombre;
     private String rfc;
     private String domicilio;
     private String telefono;
-    private String zona;
+    private int idZona;
+    
 
     // Constructor
-    public Persona(String nombre, String rfc, String domicilio, String telefono, String zona) {
+    protected Persona(int idPersona, String nombre, String rfc, String domicilio, String telefono, int idZona) {
+        this.idPersona = idPersona;
         this.nombre = nombre;
         this.rfc = rfc;
         this.domicilio = domicilio;
         this.telefono = telefono;
-        this.zona = zona;
+        this.idZona = idZona;
     }
 
     //Setters
@@ -40,13 +39,17 @@ public class Persona {
         this.telefono = telefono;
     }
 
-    public void setZona(String zona) {
-        this.zona = zona;
+    public void setZona(int idZona) {
+        this.idZona = idZona;
     }
 
 
     //Getters
-
+    
+    public int getIdPersona(){
+        return idPersona;
+    }
+    
     public String getNombre() {
         return nombre;
     }
@@ -63,8 +66,15 @@ public class Persona {
         return telefono;
     }
 
-    public String getZona() {
-        return zona;
+    public int getIdZona() {
+        return idZona;
     }
+
+    @Override
+    public String toString() {
+        return "Persona{" + "idPersona=" + idPersona + ", nombre=" + nombre + ", rfc=" + rfc + ", domicilio=" + domicilio + ", telefono=" + telefono + ", idZona=" + idZona + '}';
+    }
+    
+    
 
 }
