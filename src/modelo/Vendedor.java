@@ -1,19 +1,20 @@
 package modelo;
 
 
+import java.util.Date;
 import javax.swing.JOptionPane;
 
 //Esta NO ES DTO. Tiene un método para crear vendedores
 //y eso hace que ya no sea DTO.
 
 public class Vendedor extends Persona {
-    private String fechaContratacion;
+    private Date fechaContratacion;
     private double porcentajeComisiones;
     private int idVendedor;
 
     // Constructor
 
-    public Vendedor(String nombre, String rfc, String domicilio, String telefono, String zona) {
+    public Vendedor(String nombre, String rfc, String domicilio, String telefono, Zona zona) {
         
         super(nombre, rfc, domicilio, telefono, zona);
 
@@ -21,7 +22,7 @@ public class Vendedor extends Persona {
     
     
     public Vendedor(String nombre, String rfc, String domicilio, String telefono, 
-            String zona, String fechaContratacion, double porcentajeComisiones, 
+            Zona zona, Date fechaContratacion, double porcentajeComisiones, 
             int idVendedor) {
         
         super(nombre, rfc, domicilio, telefono, zona);
@@ -33,7 +34,7 @@ public class Vendedor extends Persona {
 
     //Setters
 
-    public void setFechaContratacion(String fechaContratacion) {
+    public void setFechaContratacion(Date fechaContratacion) {
         this.fechaContratacion = fechaContratacion;
     }
 
@@ -46,7 +47,7 @@ public class Vendedor extends Persona {
     }
 
 
-    public String getFechaContratacion() {
+    public Date getFechaContratacion() {
         return fechaContratacion;
     }
 
@@ -64,8 +65,8 @@ public class Vendedor extends Persona {
         String rfc = JOptionPane.showInputDialog("Ingrese el RFC del vendedor:");
         String domicilio = JOptionPane.showInputDialog("Ingrese el domicilio del vendedor:");
         String telefono = JOptionPane.showInputDialog("Ingrese el teléfono del vendedor:");
-        String zona = JOptionPane.showInputDialog("Ingrese la zona de entrega del vendedor:");
-        String fechaContratacion = JOptionPane.showInputDialog("Ingrese la fecha de contratación del vendedor:");
+        Zona zona = null; //JOptionPane.showInputDialog("Ingrese la zona de entrega del vendedor:");
+        Date fechaContratacion = null; //JOptionPane.showInputDialog("Ingrese la fecha de contratación del vendedor:");
         double porcentajeComisiones = Double.parseDouble(JOptionPane.showInputDialog("Ingrese el porcentaje de comisiones del vendedor:"));
         int idVendedor = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el identificador (ID) del vendedor:"));
 
