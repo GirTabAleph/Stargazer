@@ -11,8 +11,12 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import modelo.Producto;
 import modelo.DAOProductoArrayList;
+import modelo.IDAOProducto;
+import modelo.bd.DAOProductoBD;
 
 public class IGUProductos extends JInternalFrame{
+    
+    private static IGUProductos singleton;
     
     private JLabel[] etiquetas = {
     
@@ -46,37 +50,61 @@ public class IGUProductos extends JInternalFrame{
 
     };
     
-    private BotonRedondeado btnAceptar = new BotonRedondeado("Aceptar");
-            
+    private JButton btnAceptar, btnCancelar, btnLimpiar ;
     
     private JTable tabla;
-    DefaultTableModel modeloTabla;
+    private DefaultTableModel modeloTabla;
     
-    private DAOProductoArrayList modelo = new DAOProductoArrayList();
+    private IDAOProducto modelo; //CAMBIAR EL DAO LPM.
     
     //Definir control apra esta ventana.
-    private ControlIGUProductos controlProductos = new ControlIGUProductos(this);
+    private ControlIGUProductos controlProductos;
     
     //Construir ventana en el constructor.
-    public IGUProductos(){
+    private IGUProductos(){
         
         //redimensionable
         super("Catálogo de productos", true, true, true, true);
         setSize(690, 590);
         
-        setLayout(null);
+        Box panel = Box.createVerticalBox();
         
-        add(getPanelEdicion(), BorderLayout.NORTH);
+        panel.add(getPanelEdicion());
         
-        add(getToolBar(), BorderLayout.CENTER);
+        panel.add(getToolBar());
         
-        add(getPanelTabla(), BorderLayout.SOUTH);
+        panel.add(getPanelTabla());
+        
+        add(panel, BorderLayout.CENTER);
         
         desactivarID();
         
         activarCampos();
         
                 
+    }
+    
+    public void initComponents(){
+        
+        btnAceptar = new JButton("Aceptar");
+        btnCancelar = new JButton("Cancelar");
+        btnLimpiar = new JButton("Limpiar campos");
+    
+        tabla = new JTable();
+        modeloTabla = new DefaultTableModel(){
+            @Override
+            public boolean isCellEditable(int renglon, int columna){
+                
+                return false;
+                
+            }
+        };
+
+        modelo = new DAOProductoBD();
+
+        //Definir control para esta ventana.
+        controlProductos = new ControlIGUProductos(this);
+
     }
     
     public JPanel getPanelDatos(){
@@ -100,37 +128,21 @@ public class IGUProductos extends JInternalFrame{
         
         JPanel panelBotones = new JPanel();
         Box cajaBotones = Box.createVerticalBox();
-        try {
+        cajaBotones.add(Box.createVerticalStrut(15));
+        cajaBotones.add(btnAceptar);
+        cajaBotones.add(Box.createVerticalStrut(10));
+        cajaBotones.add(btnCancelar);
+        cajaBotones.add(Box.createVerticalStrut(10));
+        cajaBotones.add(btnLimpiar);
         
-            BotonRedondeado btnCancelar = btnAceptar.clone();
-            btnCancelar.setText("Cancelar");
-            
-                
-            BotonRedondeado btnLimpiar = btnAceptar.clone();
-            btnLimpiar.setText("Limpiar campos");
+        panelBotones.setBorder(new LineBorder(Color.BLUE));
+        panelBotones.add(cajaBotones);
         
-            cajaBotones.add(Box.createVerticalStrut(15));
-            cajaBotones.add(btnAceptar);
-            cajaBotones.add(Box.createVerticalStrut(10));
-            cajaBotones.add(btnCancelar);
-            cajaBotones.add(Box.createVerticalStrut(10));
-            cajaBotones.add(btnLimpiar);
-
-
-
-            panelBotones.setBorder(new LineBorder(Color.BLUE));
-            panelBotones.add(cajaBotones);
-
-            btnAceptar.addActionListener(controlProductos);
-            btnCancelar.addActionListener(controlProductos);
-            btnLimpiar.addActionListener(controlProductos);
-        
-        }catch( CloneNotSupportedException exClone){
-        
-        }
+        btnAceptar.addActionListener(controlProductos);
+        btnCancelar.addActionListener(controlProductos);
+        btnLimpiar.addActionListener(controlProductos);
         
         return panelBotones;
-        
         
     }
     
@@ -143,9 +155,6 @@ public class IGUProductos extends JInternalFrame{
         panelEdicion.setLayout(new BorderLayout() );
         panelEdicion.add(getPanelDatos(), BorderLayout.CENTER);
         panelEdicion.add(getPanelBotones(), BorderLayout.EAST);
-        
-        panelEdicion.setBounds(0, 0, 475, 200);
-        
         
         return panelEdicion;
         
@@ -165,8 +174,12 @@ public class IGUProductos extends JInternalFrame{
     
     
     public Producto getProducto(boolean cambiarId){
-
-
+        
+        /*
+        int id, String nombre, String ubicacion, double precio, double costo,
+                    double descuento, String categoria, int proveedor, int stockMin,
+                    int stockMax, int existencias
+        */
         int id;
         if(cambiarId ){
         
@@ -211,13 +224,16 @@ public class IGUProductos extends JInternalFrame{
         btBorrar.addActionListener(controlProductos);
         btEditar.addActionListener(controlProductos);
         
+        /*
         ImageIcon imageIcon = new ImageIcon(getClass().getResource("/iconos/plus.png")); // load the image to a imageIcon
         Image image = imageIcon.getImage(); // transform it 
-        Image newimg = image.getScaledInstance(25, 25,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        Image newimg = image.getScaledInstance(30, 30,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
         imageIcon = new ImageIcon(newimg);  // transform it back
-
+        */
         
-        btNuevo.setIcon(imageIcon);
+        btNuevo.setIcon(getIcono(new ImageIcon(getClass().getResource("/iconos/nuevo.png")) ));
+        btBorrar.setIcon(getIcono(new ImageIcon(getClass().getResource("/iconos/borrar.png")) ));
+        btEditar.setIcon(getIcono(new ImageIcon(getClass().getResource("/iconos/editar.png")) ));
         
         btNuevo.setActionCommand("Nuevo");
         btBorrar.setActionCommand("Borrar");
@@ -227,7 +243,7 @@ public class IGUProductos extends JInternalFrame{
         toolBar.add(btBorrar);
         toolBar.add(btEditar);
         
-        toolBar.setBounds(3, 190, 470, 55);
+        
         
         return toolBar;
         
@@ -262,6 +278,12 @@ public class IGUProductos extends JInternalFrame{
         
     }
     
+    /*
+        int id, String nombre, String ubicacion, double precio, double costo,
+                    double descuento, String categoria, int proveedor, int stockMin,
+                    int stockMax, int existencias
+        */
+    
     public void setProducto(Producto producto){
         
         campos[1].setText(producto.getNombre());
@@ -290,8 +312,6 @@ public class IGUProductos extends JInternalFrame{
         panelTabla.add(scroll);
         
         setTablaProductos();
-        
-        panelTabla.setBounds(5, 15, 470, 85);
         
         return panelTabla;
         
@@ -329,176 +349,28 @@ public class IGUProductos extends JInternalFrame{
         
     }
     
-}
-
-
-/*
-
-package vista;
-
-import controlador.ControlIGUProductos;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GridLayout;
-import javax.swing.*;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableModel;
-import modelo.Producto;
-import modelo.DAOProductoArrayList;
-
-public class IGUProductos extends JInternalFrame {
-
-    private JTextField[] campos;
-    private JButton btnAgregar, btnActualizar, btnEliminar, btnBuscar, btnCancelar, btnListar;
-    private JTable tabla;
-    private DefaultTableModel modeloTabla;
-    private DAOProductoArrayList dao;
-    private ControlIGUProductos control;
-
-    public IGUProductos() {
-        super("Gestión de Productos", true, true, true, true);
-        setSize(800, 600);
-        setLayout(new BorderLayout());
-
-        dao = new DAOProductoArrayList();
-        control = new ControlIGUProductos(this, dao);
-
-        // Configuración de componentes de entrada
-        JPanel panelCampos = new JPanel(new GridLayout(11, 2, 5, 5));
-        String[] etiquetas = {"ID", "Nombre", "Ubicación", "Precio", "Costo", 
-                              "Descuento", "Categoría", "Proveedor", "Stock Min", 
-                              "Stock Max", "Existencias"};
+    public ImageIcon getIcono(ImageIcon imagen){
         
-        campos = new JTextField[etiquetas.length];
+        int alto = 30;
+        int ancho = 30;
         
-        for (int i = 0; i < etiquetas.length; i++) {
-            JLabel label = new JLabel(etiquetas[i]);
-            campos[i] = new JTextField(20);
-            panelCampos.add(label);
-            panelCampos.add(campos[i]);
+        ImageIcon nuevo = 
+                new ImageIcon(imagen.getImage().getScaledInstance(ancho, alto, Image.SCALE_DEFAULT));
+        
+        return nuevo;
+        
+    }
+    
+    public static IGUProductos getInstance(){
+        
+        if(singleton == null){
+            
+            singleton = new IGUProductos();
+            
         }
         
-        panelCampos.setBorder(new TitledBorder(new LineBorder(Color.GRAY), "Datos del Producto"));
-        add(panelCampos, BorderLayout.WEST);
-
-        // Configuración de botones
-        JPanel panelBotones = new JPanel(new GridLayout(6, 1, 5, 5));
-        btnAgregar = new JButton("Agregar");
-        btnActualizar = new JButton("Actualizar");
-        btnEliminar = new JButton("Eliminar");
-        btnBuscar = new JButton("Buscar");
-        btnCancelar = new JButton("Cancelar");
-        btnListar = new JButton("Listar");
-
-        btnAgregar.addActionListener(control);
-        btnActualizar.addActionListener(control);
-        btnEliminar.addActionListener(control);
-        btnBuscar.addActionListener(control);
-        btnCancelar.addActionListener(control);
-        btnListar.addActionListener(control);
-
-        panelBotones.add(btnAgregar);
-        panelBotones.add(btnActualizar);
-        panelBotones.add(btnEliminar);
-        panelBotones.add(btnBuscar);
-        panelBotones.add(btnCancelar);
-        panelBotones.add(btnListar);
-
-        add(panelBotones, BorderLayout.EAST);
-
-        // Configuración de la tabla
-        JPanel panelTabla = new JPanel(new BorderLayout());
-        modeloTabla = new DefaultTableModel(new String[]{"ID", "Nombre", "Ubicación", "Precio", "Costo", 
-                                                        "Descuento", "Categoría", "Proveedor", "Stock Min", 
-                                                        "Stock Max", "Existencias"}, 0);
-        tabla = new JTable(modeloTabla);
-        JScrollPane scrollTabla = new JScrollPane(tabla);
-        panelTabla.add(scrollTabla, BorderLayout.CENTER);
-        panelTabla.setBorder(new TitledBorder(new LineBorder(Color.GRAY), "Lista de Productos"));
-        
-        add(panelTabla, BorderLayout.CENTER);
-    }
-
-    public Producto getProducto(boolean cambiarId) {
-        int id = cambiarId ? 1 : Integer.parseInt(campos[0].getText());
-
-        return new Producto.ProductoBuilder()
-                .setId(id)
-                .setNombre(campos[1].getText())
-                .setUbicacion(campos[2].getText())
-                .setPrecio(Double.parseDouble(campos[3].getText()))
-                .setCosto(Double.parseDouble(campos[4].getText()))
-                .setDescuento(Double.parseDouble(campos[5].getText()))
-                .setCategoria(campos[6].getText())
-                .setProveedor(Integer.parseInt(campos[7].getText()))
-                .setStockMin(Integer.parseInt(campos[8].getText()))
-                .setStockMax(Integer.parseInt(campos[9].getText()))
-                .setExistencias(Integer.parseInt(campos[10].getText()))
-                .build();
-    }
-
-    public void mostrarProducto(Producto producto) {
-        
-        campos[0].setText(String.valueOf(producto.getId()));
-        campos[1].setText(producto.getNombre());
-        campos[2].setText(producto.getUbicacion());
-        campos[3].setText(String.valueOf(producto.getPrecio()));
-        campos[4].setText(String.valueOf(producto.getCosto()));
-        campos[5].setText(String.valueOf(producto.getDescuento()));
-        campos[6].setText(producto.getCategoria());
-        campos[7].setText(String.valueOf(producto.getProveedor()));
-        campos[8].setText(String.valueOf(producto.getStockMin()));
-        campos[9].setText(String.valueOf(producto.getStockMax()));
-        campos[10].setText(String.valueOf(producto.getExistencias()));
+        return singleton;
         
     }
-
-    public JButton getBtnAgregar(){ 
-        
-        return btnAgregar; 
     
-    }
-    
-    public JButton getBtnActualizar(){ 
-        
-        return btnActualizar; 
-    
-    }
-    
-    public JButton getBtnEliminar(){ 
-        
-        return btnEliminar; 
-    
-    }
-    
-    public JButton getBtnBuscar(){ 
-        
-        return btnBuscar; 
-    
-    }
-    
-    public JButton getBtnCancelar(){ 
-        
-        return btnCancelar; 
-    
-    }
-    
-    public JButton getBtnListar(){ 
-        
-        return btnListar; 
-    
-    }
-    
-    public DefaultTableModel getModeloTabla(){ 
-        
-        return modeloTabla;
-    
-    }
-    
-    public JTable getTabla(){ 
-        
-        return tabla;
-    
-    }
 }
