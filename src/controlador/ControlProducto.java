@@ -12,7 +12,7 @@ import vista.IUTextoProducto;
  *
  * @author Diego Ortega
  */
-public class ControladorProducto {
+public class ControlProducto {
     
     //Inversión de control. Se instancía con la implementación de interfaz.
     private IUProducto iu = new IUTextoProducto();
