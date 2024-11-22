@@ -3,26 +3,22 @@ package controlador;
 import exceptions.ProductIDNotFoundException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import modelo.DAOProductoArrayList;
-import modelo.DAOProductoHashMap;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import modelo.IDAOProducto;
 import modelo.Producto;
+import modelo.bd.DAOProductoBD;
 import vista.IGUProductos;
-import vista.IUTextoProducto;
-
 
 /**
  * @author Israel
  */
 
-public class ControlIGUProductos implements ActionListener{
+public class ControlIGUProductos extends MouseAdapter implements ActionListener{
     
     private IGUProductos igu;
-    private IDAOProducto productos = new DAOProductoHashMap();
+    //private IDAOProducto productos = new DAOProductoHashMap();
+    private IDAOProducto productos = new DAOProductoBD();
     
     public ControlIGUProductos(IGUProductos igu){
         
@@ -40,47 +36,31 @@ public class ControlIGUProductos implements ActionListener{
             switch(comando){
 
 
-                case "Aceptar":
-                    productos.agregarProducto(igu.getProducto(true));
-                    IUTextoProducto texto = new IUTextoProducto(); 
-                    igu.activarTabla();
-                    break;
+                case "Aceptar" -> agregar();
 
-                case "Eliminar":
+                case "Eliminar" -> eliminar();
 
-                    productos.borrarProducto(igu.getId());
+                case "Cancelar" -> cancelar();    
 
-                    IUTextoProducto texto1 = new IUTextoProducto(); 
+                case "Limpiar campos" -> limpiarCampos();
+
+                case "Nuevo" -> nuevo();
+
+                case "Borrar" -> borrar();
+
+                case "Modificar" -> modificar();
+
+                case "Buscar" -> buscar();
                     
-                    break;    
-
-                case "Cancelar":
-                    igu.dispose();
-                    break;
-
-                case "Limpiar campos":
-                    igu.limpiarCampos();
-                    break;
-
-                case "Nuevo":
-                    nuevo();
-                    break;
-
-                case "Borrar":
-                    borrar();
-                    break;
-
-                case "Modificar":
-                    modificar();
-                    break;
-
-                case "Buscar":                   
-                    buscar();
-                    break;
-                    
-                case "Editar":
-                    editar();
-                    break;
+                case "Editar" -> editar();
+                
+                case "Primero" -> primero();
+                
+                case "Anterior" -> anterior();
+                
+                case "Siguiente" -> siguiente();
+                
+                case "Ultimo" -> ultimo();
 
             }
         
@@ -93,24 +73,49 @@ public class ControlIGUProductos implements ActionListener{
     
     public void nuevo(){
     
-        igu.desactivarID();
-        igu.activarCampos();
         igu.cambiarAccion("Aceptar");
+        igu.desactivarID();
+        igu.desactivarToolbar();
+        igu.activarCampos();
+        igu.activarBotones();
+        
         
     }
     
     public void borrar(){
         
-        igu.activarID();
-        igu.desactivarCampos();
-        igu.cambiarAccion("Eliminar");
+        if(igu.getId() == 0){
+        
+            igu.mensajeError("Primero seleccione un producto");
+        
+        } else {
+
+            igu.cambiarAccion("Eliminar");
+            igu.activarID();
+            igu.desactivarCampos();
+            igu.activarBotones();
+            igu.desactivarToolbar();
+        }
+        
     }
     
     public void editar(){
         
-        igu.activarID();
-        igu.desactivarCampos();
-        igu.cambiarAccion("Buscar");   
+        if(igu.getId() == 0){
+        
+            igu.mensajeError("Primero seleccione un producto");
+        
+        } else {
+        
+        
+            igu.cambiarAccion("Buscar");
+            igu.activarID();
+            igu.desactivarCampos();
+            igu.activarBotones();
+            igu.desactivarToolbar();
+
+        }
+        
     }
     
     public void buscar() throws ProductIDNotFoundException{
@@ -122,15 +127,131 @@ public class ControlIGUProductos implements ActionListener{
         
         igu.activarCampos();
         igu.desactivarID();
+        igu.activarBotones();
+        igu.desactivarToolbar();
+    
     }
+    
     public void modificar() throws ProductIDNotFoundException{
         
-        productos.modificarProducto(igu.getId(), igu.getProducto(false));
+        if(productos.modificarProducto(igu.getId(), igu.getProducto(false))){
         
-        IUTextoProducto texto1 = new IUTextoProducto(); 
+            igu.mensaje("Producto " + igu.getId() + " actualizado correctamente");
+            igu.activarTabla();
+                    
+        } else {
+        
+            igu.mensajeError("El producto " + igu.getId() + "no pude ser actualizado");
+        
+        }
+        
+        igu.limpiarCampos();
+        igu.desactivarEdicion();
+        igu.activarToolbar();
         
     }
+    
+    public void agregar() {
+
+        Producto producto = igu.getProducto();
+        if (productos.agregarProducto(producto)) {
+
+            //IUTextoProducto texto = new IUTextoProducto(); 
+            igu.mensaje("Producto agregado correctamente." + producto);
+            igu.activarTabla();
+            
+        } else {
+
+            igu.mensajeError("No se ha podido agregar el producto " + producto);
+
+        }
+        
+        igu.limpiarCampos();
+        igu.desactivarEdicion();
+        igu.activarToolbar();
+
+    }
+    
+    public void eliminar() throws ProductIDNotFoundException{
+
+        int borrar = igu.confirmacion("¿Seguro que desea borrar el producto con ID: " + igu.getId() + "?");
+        
+        if(borrar == 0){
+            
+            if(productos.borrarProducto(igu.getId())){
+        
+                igu.mensaje("Producto" + igu.getId() + " borrado correctamente");
+                igu.activarTabla();
+                
+            } else {
+            
+                igu.mensajeError("No se pudo borrar");
+            
+            }
+            
+        } else {
+        
+            igu.mensajeError("El producto" + igu.getId() + " no se borro");
+        
+        }
+        
+        igu.limpiarCampos();
+        igu.desactivarEdicion();
+        igu.activarTabla();
+        igu.activarToolbar();
+        
+    }
+    
+    public void cancelar(){
+    
+        //igu.dispose();
+        igu.limpiarCampos();
+        igu.desactivarEdicion();
+        igu.activarToolbar();
+                
+    }
+    
+    public void limpiarCampos(){
+    
+        igu.limpiarCampos();
+    
+    }
+    
+    
+    public void primero(){
+    
+        igu.mostrarPrimero();
+    
+    }
+    
+    public void anterior(){
+        
+        igu.mostrarAnterior();
+    
+    }
+    
+    public void siguiente(){
+        
+        igu.mostrarSiguiente();
+        
+    }
+    
+    public void ultimo(){
+        
+        igu.mostrarUltimo();
+    
+    }
+    
+    @Override
+    public void mouseClicked(MouseEvent evento){
+    
+        igu.setCamposDeTexto();
+    
+    }
+    
+    
 }
+
 
 
 /* package controlador;

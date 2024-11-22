@@ -72,9 +72,4 @@ public class VendedorBuilder implements BuilderPersona{
     
     }
     
-    
-    
-    
-    
-    
 }

@@ -12,7 +12,7 @@ public class ConexionBD {
     
     private final String url = "jdbc:mysql://localhost:3306/ventas";
     private final String usuario = "root";
-    private final String contrasenia = "Dortega1008.";
+    private final String contrasenia = "fca.00";
     
     private ConexionBD(){
         

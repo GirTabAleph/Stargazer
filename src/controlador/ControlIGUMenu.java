@@ -35,7 +35,7 @@ public class ControlIGUMenu implements ActionListener{
                 
             case "Productos":
                 
-                IGUProductos ventanaProductos = new IGUProductos();
+                IGUProductos ventanaProductos = IGUProductos.getInstance();
                 ventanaProductos.setVisible(true);
                 igu.getEscritorio().add(ventanaProductos);
                 break;

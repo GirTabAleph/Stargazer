@@ -3,7 +3,6 @@ package modelo;
 import java.util.Objects;
 
 //Para sorpresa de nadie, esta es DTO.
-
 public class Producto {
     
     private static int seqId = 0;
@@ -19,7 +18,8 @@ public class Producto {
     private int stockMin;
     private int stockMax;
     private int existencias;
-       
+    
+    
     //Constructor vacío.
     public Producto(){
         
@@ -53,7 +53,22 @@ public class Producto {
         
     }
 
-    //Setters y Getters
+    public Producto(String nombre, String ubicacion, double precio, double costo, double descuento, String categoria, int proveedor, int stockMin, int stockMax, int existencias) {
+        
+        this.nombre = nombre;
+        this.ubicacion = ubicacion;
+        this.precio = precio;
+        this.costo = costo;
+        this.descuento = descuento;
+        this.categoria = categoria;
+        this.proveedor = proveedor;
+        this.stockMin = stockMin;
+        this.stockMax = stockMax;
+        this.existencias = existencias;
+        
+    }
+    
+     //Setters y Getters
     public void setNombre(String nombre) { this.nombre = nombre; }
     public void setUbicacion(String ubicacion) { this.ubicacion = ubicacion; }
     public void setPrecio(double precio) { this.precio = precio; }
@@ -79,19 +94,19 @@ public class Producto {
 
     @Override
     public String toString() {
-        return "Producto{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", ubicacion='" + ubicacion + '\'' +
-                ", precio=" + precio +
-                ", costo=" + costo +
-                ", descuento=" + descuento +
-                ", categoria='" + categoria + '\'' +
-                ", proveedor='" + proveedor + '\'' +
-                ", stockMin=" + stockMin +
-                ", stockMax=" + stockMax +
-                ", existencias=" + existencias +
-                '}';
+        return "\nProducto" +
+               // "id = " + id +
+                "\nnombre = " + nombre +
+                "\nubicacion = " + ubicacion +
+                "\nprecio = " + precio +
+                "\ncosto = " + costo +
+                "\ndescuento = " + descuento +
+                "\ncategoria = " + categoria +
+                "\nproveedor = " + proveedor +
+                "\nstockMin = " + stockMin +
+                "\nstockMax = " + stockMax +
+                "\nexistencias = " + existencias 
+                ;
     }
     
     //TO-DO DEFINIR EQUALS Y HASHCODE
@@ -128,8 +143,8 @@ public class Producto {
         
     }
     
-    
-} 
+}
+
 
 
 /*

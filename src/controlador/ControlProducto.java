@@ -18,7 +18,7 @@ public class ControlProducto {
     private IUProducto iu = new IUTextoProducto();
     private IDAOProducto daoProducto = new DAOProductoArrayList();
 
-    public ControladorProducto() {
+    public ControlProducto() {
         
         int opcion;
         int idProducto;
@@ -80,7 +80,7 @@ public class ControlProducto {
                     case 4:
                         
                         iu.mensaje("Listado de todos los productos.");
-                        iu.mostrarListaProductos(daoProducto.getAllProductos() );
+                        //iu.mostrarListaProductos((daoProducto.getAllProductos() );
                         break;
                         
                     default:
@@ -108,7 +108,7 @@ public class ControlProducto {
     public static void main(String args[]){
         
         //Crear el objeto de control.
-        new ControladorProducto();
+        new ControlProducto();
         
     }
     

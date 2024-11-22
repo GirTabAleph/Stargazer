@@ -14,9 +14,11 @@ import modelo.DAOProductoArrayList;
 import modelo.IDAOProducto;
 import modelo.bd.DAOProductoBD;
 
-public class IGUProductos extends JInternalFrame{
+public class IGUProductos extends VentanaInterna{
     
     private static IGUProductos singleton;
+    
+    private JToolBar toolbar;
     
     private JLabel[] etiquetas = {
     
@@ -50,7 +52,25 @@ public class IGUProductos extends JInternalFrame{
 
     };
     
-    private JButton btnAceptar, btnCancelar, btnLimpiar ;
+    private Object[][] matrizProductos;
+    
+    private String[] titulosTabla = {
+            
+            "ID", 
+            "Nombre", 
+            "Ubicación", 
+            "Precio", 
+            "Costo",
+            "Descuento", 
+            "Categoría", 
+            "ID proveedor", 
+            "Stock mínimo", 
+            "Stock máximo", 
+            "Existencias"
+        
+        };
+    
+    private JButton btnAceptar, btnCancelar, btnLimpiar;
     
     private JTable tabla;
     private DefaultTableModel modeloTabla;
@@ -67,30 +87,50 @@ public class IGUProductos extends JInternalFrame{
         super("Catálogo de productos", true, true, true, true);
         setSize(690, 590);
         
+        initComponents();
+        
         Box panel = Box.createVerticalBox();
         
         panel.add(getPanelEdicion());
         
-        panel.add(getToolBar());
+        panel.add(toolbar);
         
         panel.add(getPanelTabla());
         
         add(panel, BorderLayout.CENTER);
         
-        desactivarID();
-        
-        activarCampos();
-        
+        desactivarEdicion();
                 
     }
     
+    public void desactivarEdicion(){
+        
+        desactivarID();
+        
+        desactivarCampos();
+        
+        desactivarBotones();
+        
+        activarToolbar();
+        
+    }
+    
     public void initComponents(){
+       
+         //Definir control para esta ventana.
+        controlProductos = new ControlIGUProductos(this);
         
         btnAceptar = new JButton("Aceptar");
         btnCancelar = new JButton("Cancelar");
         btnLimpiar = new JButton("Limpiar campos");
-    
+        
+        toolbar = getToolBar();
+        
         tabla = new JTable();
+        
+        //Escucha para eventos de ratón.
+        tabla.addMouseListener(controlProductos);
+        
         modeloTabla = new DefaultTableModel(){
             @Override
             public boolean isCellEditable(int renglon, int columna){
@@ -101,10 +141,22 @@ public class IGUProductos extends JInternalFrame{
         };
 
         modelo = new DAOProductoBD();
-
-        //Definir control para esta ventana.
-        controlProductos = new ControlIGUProductos(this);
-
+        
+        //Esta matriz son propiamente los productos.
+        matrizProductos = modelo.getAllProductos();
+        
+        //Para las columnas de la tabla.
+        /*
+        int id, String nombre, String ubicacion, double precio, double costo,
+                    double descuento, String categoria, int proveedor, int stockMin,
+                    int stockMax, int existencias) {
+        
+        */
+        
+        
+        modeloTabla.setDataVector(matrizProductos, titulosTabla);
+        
+       
     }
     
     public JPanel getPanelDatos(){
@@ -168,8 +220,19 @@ public class IGUProductos extends JInternalFrame{
     }
     
     public int getId(){
+            
+        
+        System.out.println( campos[0].getText().equals("") );
+        if(campos[0].getText().equals("")){
+        
+            return 0;
+        
+        } else {
+        
+            return Integer.parseInt(campos[0].getText());
+        
+        }
     
-        return Integer.parseInt(campos[0].getText());
     }
     
     
@@ -204,6 +267,22 @@ public class IGUProductos extends JInternalFrame{
         
     }
     
+    public Producto getProducto(){
+        
+        return new Producto(campos[1].getText(),
+                            campos[2].getText(),
+                            Double.parseDouble(campos[3].getText()),
+                            Double.parseDouble(campos[4].getText()),
+                            Double.parseDouble(campos[5].getText()),
+                            campos[6].getText(),
+                            Integer.parseInt(campos[7].getText()),
+                            Integer.parseInt(campos[8].getText()),
+                            Integer.parseInt(campos[9].getText()),
+                            Integer.parseInt(campos[10].getText())
+        );
+        
+    }
+    
     public void limpiarCampos(){
         
         
@@ -218,11 +297,18 @@ public class IGUProductos extends JInternalFrame{
     public JToolBar getToolBar(){
         
         JToolBar toolBar = new JToolBar();
-        JButton btNuevo = new JButton(), btBorrar = new JButton("-"), btEditar = new JButton("E"); 
+        JButton btNuevo = new JButton(), btBorrar = new JButton(), btEditar = new JButton(),
+                btPrimero = new JButton(), btAnterior = new JButton(), btSiguiente = new JButton(), 
+                btUltimo = new JButton(); 
         
         btNuevo.addActionListener(controlProductos);
         btBorrar.addActionListener(controlProductos);
         btEditar.addActionListener(controlProductos);
+        btPrimero.addActionListener(controlProductos);
+        btAnterior.addActionListener(controlProductos);
+        btSiguiente.addActionListener(controlProductos);
+        btUltimo.addActionListener(controlProductos);
+        
         
         /*
         ImageIcon imageIcon = new ImageIcon(getClass().getResource("/iconos/plus.png")); // load the image to a imageIcon
@@ -234,14 +320,26 @@ public class IGUProductos extends JInternalFrame{
         btNuevo.setIcon(getIcono(new ImageIcon(getClass().getResource("/iconos/nuevo.png")) ));
         btBorrar.setIcon(getIcono(new ImageIcon(getClass().getResource("/iconos/borrar.png")) ));
         btEditar.setIcon(getIcono(new ImageIcon(getClass().getResource("/iconos/editar.png")) ));
+        btPrimero.setIcon(getIcono(new ImageIcon(getClass().getResource("/iconos/primero.png")) ));
+        btAnterior.setIcon(getIcono(new ImageIcon(getClass().getResource("/iconos/anterior.png")) ));
+        btSiguiente.setIcon(getIcono(new ImageIcon(getClass().getResource("/iconos/siguiente.png")) ));
+        btUltimo.setIcon(getIcono(new ImageIcon(getClass().getResource("/iconos/ultimo.png")) ));
         
         btNuevo.setActionCommand("Nuevo");
         btBorrar.setActionCommand("Borrar");
         btEditar.setActionCommand("Editar");
+        btAnterior.setActionCommand("Anterior");
+        btSiguiente.setActionCommand("Siguiente");
+        btPrimero.setActionCommand("Primero");
+        btUltimo.setActionCommand("Ultimo");
         
         toolBar.add(btNuevo);
         toolBar.add(btBorrar);
         toolBar.add(btEditar);
+        toolBar.add(btPrimero);
+        toolBar.add(btAnterior);
+        toolBar.add(btSiguiente);
+        toolBar.add(btUltimo);
         
         
         
@@ -343,11 +441,14 @@ public class IGUProductos extends JInternalFrame{
         
     }
     
-    public void activarTabla(){
-                
-        modeloTabla.fireTableDataChanged();
-        
-    }
+        public void activarTabla(){
+
+            //modeloTabla.fireTableDataChanged();
+            matrizProductos = modelo.getAllProductos();
+            modeloTabla.setDataVector(matrizProductos, titulosTabla);
+
+
+        }
     
     public ImageIcon getIcono(ImageIcon imagen){
         
@@ -373,4 +474,131 @@ public class IGUProductos extends JInternalFrame{
         
     }
     
+    public void mostrarPrimero(){
+        
+        if(tabla.getRowCount() > 0){
+            
+            tabla.changeSelection(0, 0, false, false);
+            
+        }
+        
+        setCamposDeTexto();
+        
+    }
+    
+    public void mostrarAnterior(){
+        
+        int renglon = tabla.getSelectedRow();
+        
+        if(renglon > 0){
+            
+            tabla.changeSelection(renglon - 1, 0, false, false);
+            
+        } else {
+            
+            tabla.changeSelection(tabla.getRowCount() - 1, 0, false, false);
+            
+        }
+        
+        setCamposDeTexto();
+        
+    }
+    
+    public void mostrarSiguiente(){
+        
+        int renglon = tabla.getSelectedRow();
+        
+        if(renglon < tabla.getRowCount() - 1){
+            
+            tabla.changeSelection(renglon + 1, 0, false, false);
+            
+        } else {
+            
+            //Ya estamos en el último, nos vamos al primero.
+            tabla.changeSelection(0, 0, false, false);
+            
+        }
+        
+        setCamposDeTexto();
+        
+    }
+    
+    public void mostrarUltimo(){
+        
+        tabla.changeSelection(tabla.getRowCount() - 1, 0, false, false);
+        setCamposDeTexto();
+        
+    }
+    
+    public void setCamposDeTexto(){
+        
+        int renglon = tabla.getSelectedRow();
+        
+        if(renglon >= 0 && tabla.getRowCount() != 0){
+            
+            campos[0].setText(tabla.getValueAt(renglon, 0).toString());
+            campos[1].setText(tabla.getValueAt(renglon, 1).toString());
+            campos[2].setText(tabla.getValueAt(renglon, 2).toString());
+            campos[3].setText(tabla.getValueAt(renglon, 3).toString());
+            campos[4].setText(tabla.getValueAt(renglon, 4).toString());
+            campos[5].setText(tabla.getValueAt(renglon, 5).toString());
+            campos[6].setText(tabla.getValueAt(renglon, 6).toString());
+            campos[7].setText(tabla.getValueAt(renglon, 7).toString());
+            campos[8].setText(tabla.getValueAt(renglon, 8).toString());
+            campos[9].setText(tabla.getValueAt(renglon, 9).toString());
+            campos[10].setText(tabla.getValueAt(renglon, 10).toString());
+            
+        }
+        
+    }
+    
+    public void activarBotones(){
+        
+        btnAceptar.setEnabled(true);
+        btnCancelar.setEnabled(true);
+        btnLimpiar.setEnabled(true);
+        
+    }
+    
+    public void desactivarBotones(){
+        
+        btnAceptar.setEnabled(false);
+        btnCancelar.setEnabled(false);
+        btnLimpiar.setEnabled(false);
+        
+    }
+    
+    public void activarToolbar(){
+        
+        JButton boton;
+        
+        for(int i = 0; i < toolbar.getComponentCount() ; i++){
+            
+            if(toolbar.getComponent(i) instanceof JButton){
+                
+                boton = (JButton)toolbar.getComponent(i);
+                boton.setEnabled(true);
+                
+            }
+            
+        }
+        
+    }
+    
+    public void desactivarToolbar(){
+        
+        JButton boton;
+        
+        for(int i = 0; i < toolbar.getComponentCount() ; i++){
+            
+            if(toolbar.getComponent(i) instanceof JButton){
+                
+                boton = (JButton)toolbar.getComponent(i);
+                boton.setEnabled(false);
+                
+            }
+            
+        }
+        
+    }
 }

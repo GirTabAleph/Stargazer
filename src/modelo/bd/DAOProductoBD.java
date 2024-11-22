@@ -28,8 +28,8 @@ public class DAOProductoBD implements IDAOProducto {
         
         String instruccion = """
                                     INSERT INTO producto(
+                                    
                                     	
-                                    	id,
                                     	nombre,
                                     	ubicacion,
                                     	precio,
@@ -43,7 +43,7 @@ public class DAOProductoBD implements IDAOProducto {
                                     
                                     ) VALUES (
                                     	
-                                    	?,
+                                    	
                                     	?,
                                     	?,
                                     	?,
@@ -66,21 +66,21 @@ public class DAOProductoBD implements IDAOProducto {
             
             conexion.setAutoCommit(false);
             
-            instruccionPreparada.setInt(1, producto.getId());
-            instruccionPreparada.setString(2, producto.getNombre());
-            instruccionPreparada.setString(3, producto.getUbicacion());
-            instruccionPreparada.setDouble(4, producto.getPrecio());
-            instruccionPreparada.setDouble(5, producto.getCosto());
-            instruccionPreparada.setDouble(6, producto.getDescuento());
-            instruccionPreparada.setString(7, producto.getCategoria());
-            instruccionPreparada.setInt(8, producto.getProveedor());
-            instruccionPreparada.setInt(9, producto.getStockMin());
-            instruccionPreparada.setInt(10, producto.getStockMax());
-            instruccionPreparada.setInt(11, producto.getExistencias());
+            instruccionPreparada.setString(1, producto.getNombre());
+            instruccionPreparada.setString(2, producto.getUbicacion());
+            instruccionPreparada.setDouble(3, producto.getPrecio());
+            instruccionPreparada.setDouble(4, producto.getCosto());
+            instruccionPreparada.setDouble(5, producto.getDescuento());
+            instruccionPreparada.setString(6, producto.getCategoria());
+            instruccionPreparada.setInt(7, producto.getProveedor());
+            instruccionPreparada.setInt(8, producto.getStockMin());
+            instruccionPreparada.setInt(9, producto.getStockMax());
+            instruccionPreparada.setInt(10, producto.getExistencias());
             
             if(instruccionPreparada.executeUpdate() == 1){
                 
                 conexion.commit();
+                System.out.println("Insertado");
                 
             } else {
                 
@@ -114,6 +114,7 @@ public class DAOProductoBD implements IDAOProducto {
                              DELETE FROM producto 
                              	WHERE id = ?
                              """;
+        
         try(PreparedStatement instruccionPreparada
                 = conexion.prepareStatement(instruccion)){
             
@@ -192,7 +193,7 @@ public class DAOProductoBD implements IDAOProducto {
             
         } catch(SQLException sqlex){
             
-            System.out.println("Errorde actualización.");
+            System.out.println("Error de actualización.");
             sqlex.printStackTrace();
             correcto = false;
             
