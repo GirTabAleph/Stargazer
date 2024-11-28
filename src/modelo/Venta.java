@@ -1,70 +1,132 @@
+/*
+TO-DO: Cambiar el producto por un int, no queremos el objeto entero, solo el ID.
+       Lo mismo aplica para el cliente y para el vendedor. Listo. 
+
+*/
+
 package modelo;
 
-import java.time.LocalDateTime;
+import java.util.Date;
+
+//Jesus Fucking Christ, who wrote this madness?
+//Nevermind, i did.
+//¿Por qué tiene los métodos como sobrecargas de interfaz? Para este punto ya me
+// vale madres. -XOXO Diego.
 
 //Tampoco es DTO, tiene más cosas que getters/setters.
-
-public class Venta {
-    private Producto producto;
-    private double costoUnitario;
+public class Venta /*implements IVenta*/{
+    
+    private static int seqId = 0;
+    
+    private int idVenta;
+    private ProductoVendido productoV; //¿?
+    private int idProductoV;
+    private double costoUnitario; 
     private double costoTotal;
-    private LocalDateTime fechaVenta;
-    private String zona;
-    private Cliente cliente;
-    private Vendedor vendedor;
+    private Date fechaVenta;
+    private int idZona;
+    private int idCliente;
+    private int idVendedor;
     private boolean requiereFactura;
 
-    public Venta(Producto producto, double costoUnitario, double costoTotal, LocalDateTime fechaVenta, 
-                 String zona, Cliente cliente, Vendedor vendedor, boolean requiereFactura) {
-        this.producto = producto;
+    public Venta(int idProductoV, double costoUnitario, double costoTotal, 
+            Date fechaVenta, int idZona, int idCliente, int idVendedor,
+            boolean requiereFactura) {
+        
+        this.idProductoV = idProductoV;
         this.costoUnitario = costoUnitario;
         this.costoTotal = costoTotal;
         this.fechaVenta = fechaVenta;
-        this.zona = zona;
-        this.cliente = cliente;
-        this.vendedor = vendedor;
+        this.idZona = idZona;
+        this.idCliente = idCliente;
+        this.idVendedor = idVendedor;
         this.requiereFactura = requiereFactura;
+   
     }
 
-    // Método para crear una venta
-    public static Venta crearVenta(Producto producto, double cantidad, LocalDateTime fechaVenta, 
-                                   String zona, Cliente cliente, Vendedor vendedor, boolean requiereFactura) {
-
-        if (producto == null) {
-            throw new IllegalArgumentException("El producto no puede ser nulo.");
+    public Venta(int idVenta, ProductoVendido productoV, int idProductoV, double costoUnitario, double costoTotal, Date fechaVenta, int idZona, int idCliente, int idVendedor, boolean requiereFactura) {
+        
+        if(idVenta == 0){
+            
+            this.idVenta = idVenta;
+            
+        } else {
+            
+            this.idVenta = incrementarId();
+            
         }
+        
+        this.idVenta = idVenta;
+        this.productoV = productoV;
+        this.idProductoV = idProductoV;
+        this.costoUnitario = costoUnitario;
+        this.costoTotal = costoTotal;
+        this.fechaVenta = fechaVenta;
+        this.idZona = idZona;
+        this.idCliente = idCliente;
+        this.idVendedor = idVendedor;
+        this.requiereFactura = requiereFactura;
+   
+    }
+    
+    public Venta crearVenta(int idProductoV, double cantidad, Date fechaVenta, 
+                                   int idZona, int idCliente, int idVendedor, boolean requiereFactura) {
 
-        if (cliente == null) {
-            throw new IllegalArgumentException("El cliente no puede ser nulo.");
-        }
-
-        if (vendedor == null) {
-            throw new IllegalArgumentException("El vendedor no puede ser nulo.");
-        }
-
-        double costoUnitario = producto.getPrecio();
+        //Lógica va aquí.
+        double costoUnitario = productoV.getPrecio();
         double costoTotal = costoUnitario * cantidad;
 
-        return new Venta(producto, costoUnitario, costoTotal, fechaVenta, zona, cliente, vendedor, requiereFactura);
+        return new Venta(idProductoV, costoUnitario, costoTotal, fechaVenta, idZona, idCliente, idVendedor, requiereFactura);
     }
-
+    
     public boolean requiereFactura() {
         return requiereFactura;
     }
-
-    public Cliente getCliente() {
-        return cliente;
+    
+    public int getIdCliente() {
+        return idCliente;
     }
-
-    public LocalDateTime getFechaVenta() {
+    
+    public Date getFechaVenta() {
         return fechaVenta;
     }
-
-    public Producto getProducto() {
-        return producto;
+    
+    public ProductoVendido getProductoVendido() {
+        return productoV;
     }
-
+    
     public double getCostoTotal() {
         return costoTotal;
     }
+
+    public ProductoVendido getProductoV() {
+        return productoV;
+    }
+
+    public int getIdProductoV() {
+        return idProductoV;
+    }
+
+    public double getCostoUnitario() {
+        return costoUnitario;
+    }
+
+    public int getIdZona() {
+        return idZona;
+    }
+
+    public int getIdVendedor() {
+        return idVendedor;
+    }
+
+    public boolean getRequiereFactura() {
+        return requiereFactura;
+    }
+    
+    private static int incrementarId(){
+        
+        return ++seqId;
+        
+    } 
+    
 }
