@@ -10,9 +10,12 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import modelo.Producto;
-import modelo.DAOProductoArrayList;
 import modelo.IDAOProducto;
 import modelo.bd.DAOProductoBD;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import com.toedter.calendar.JDateChooser;
 
 public class IGUProductos extends VentanaInterna{
     
@@ -32,7 +35,8 @@ public class IGUProductos extends VentanaInterna{
         new JLabel ("Proveedor"),
         new JLabel ("Stock mínimo: "),
         new JLabel ("Stock máximo: "),
-        new JLabel ("Existencias: ")
+        new JLabel ("Existencias: "),
+        new JLabel ("Fecha de alta: ")
             
     };
     
@@ -66,7 +70,8 @@ public class IGUProductos extends VentanaInterna{
             "ID proveedor", 
             "Stock mínimo", 
             "Stock máximo", 
-            "Existencias"
+            "Existencias",
+            "Fecha de alta"
         
         };
     
@@ -79,6 +84,8 @@ public class IGUProductos extends VentanaInterna{
     
     //Definir control apra esta ventana.
     private ControlIGUProductos controlProductos;
+    
+    private JDateChooser txFechaAlta;
     
     //Construir ventana en el constructor.
     private IGUProductos(){
@@ -156,6 +163,9 @@ public class IGUProductos extends VentanaInterna{
         
         modeloTabla.setDataVector(matrizProductos, titulosTabla);
         
+        txFechaAlta = new JDateChooser("dd/MM/yyyy", "##/##/####", '_');
+        
+        
        
     }
     
@@ -165,12 +175,16 @@ public class IGUProductos extends VentanaInterna{
         panelDatos.setLayout(new GridLayout(11, 2));
         //Agregar componentes.
         
-        for(int pos = 0; pos < etiquetas.length; pos++){
+        for(int pos = 0; pos < etiquetas.length - 1; pos++){
             
             panelDatos.add(etiquetas[pos]);
             panelDatos.add(campos[pos]);
             
+            
         }
+        
+        panelDatos.add(etiquetas[etiquetas.length - 1]);
+        panelDatos.add(txFechaAlta);
         
         return panelDatos;
         
@@ -262,7 +276,9 @@ public class IGUProductos extends VentanaInterna{
                             Integer.parseInt(campos[7].getText()),
                             Integer.parseInt(campos[8].getText()),
                             Integer.parseInt(campos[9].getText()),
-                            Integer.parseInt(campos[10].getText())
+                            Integer.parseInt(campos[10].getText()),
+                            txFechaAlta.getDate()
+                            
         );
         
     }
@@ -278,7 +294,8 @@ public class IGUProductos extends VentanaInterna{
                             Integer.parseInt(campos[7].getText()),
                             Integer.parseInt(campos[8].getText()),
                             Integer.parseInt(campos[9].getText()),
-                            Integer.parseInt(campos[10].getText())
+                            Integer.parseInt(campos[10].getText()),
+                            txFechaAlta.getDate()
         );
         
     }
@@ -291,6 +308,8 @@ public class IGUProductos extends VentanaInterna{
             campo.setText("");
     
         }
+        
+        txFechaAlta.setDate(null);
         
     }
    
@@ -360,6 +379,7 @@ public class IGUProductos extends VentanaInterna{
             campos[campo].setEnabled(true);
             
         }
+        campos[campos.length - 1].setEnabled(true);
     }
     
     public void desactivarID(){
@@ -371,8 +391,11 @@ public class IGUProductos extends VentanaInterna{
         
         for(int campo = 1; campo < campos.length ; campo++ ){
         
-        campos[campo].setEnabled(false);
+            campos[campo].setEnabled(false);
+        
         }
+        
+        txFechaAlta.setEnabled(false);
         
     }
     
@@ -394,6 +417,7 @@ public class IGUProductos extends VentanaInterna{
         campos[8].setText(String.valueOf(producto.getStockMin()));
         campos[9].setText(String.valueOf(producto.getStockMax()));
         campos[10].setText(String.valueOf(producto.getExistencias()));
+        txFechaAlta.setDate(producto.getFechaAlta());
     }
     
     public JPanel getPanelTabla(){
@@ -418,8 +442,8 @@ public class IGUProductos extends VentanaInterna{
     public void setTablaProductos(){
         
         String [] titulos = {"ID", "Nombre", "Ubicación", "Precio", "Costo", 
-            "Descuento", "Categpría", "Proveedor", "Stock mínimo", "Stock máximo",
-            "Existencias"};
+            "Descuento", "Categoría", "Proveedor", "Stock mínimo", "Stock máximo",
+            "Existencias", "Fecha de alta"};
         
         modeloTabla = new DefaultTableModel(){
                 
@@ -547,6 +571,7 @@ public class IGUProductos extends VentanaInterna{
             campos[8].setText(tabla.getValueAt(renglon, 8).toString());
             campos[9].setText(tabla.getValueAt(renglon, 9).toString());
             campos[10].setText(tabla.getValueAt(renglon, 10).toString());
+            txFechaAlta.setDate((Date)tabla.getValueAt(renglon, 11));
             
         }
         
@@ -601,4 +626,5 @@ public class IGUProductos extends VentanaInterna{
         }
         
     }
+    
 }
