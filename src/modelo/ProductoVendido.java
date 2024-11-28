@@ -2,23 +2,22 @@ package modelo;
 
 //Esta es DTO
 
-public class ProductoVendido {
+public class ProductoVendido{
     
     private int idProducto;
-    private float precio;
+    private double precio;
     private int cantidad;
-    private double descuento;
-    private String nombre;
-    
+    private double descuento;    
 
-    public ProductoVendido(int idProducto, float precio, int cantidad, String nombre) {
+    public ProductoVendido(int idProducto, double precio, int cantidad){
+        
         this.idProducto = idProducto;
         this.precio = precio;
         this.cantidad = cantidad;
-        this.nombre = nombre;
+
     }
 
-    public int getIdProducto() {
+    public int getIdProducto(Producto producto) {
         return idProducto;
     }
 
@@ -26,11 +25,11 @@ public class ProductoVendido {
         this.idProducto = idProducto;
     }
 
-    public float getPrecio() {
+    public double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(float precio) {
+    public void setPrecio(double precio) {
         this.precio = precio;
     }
 
@@ -48,14 +47,6 @@ public class ProductoVendido {
 
     public void setDescuento(double descuento) {
         this.descuento = descuento;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
     }
     
     @Override
