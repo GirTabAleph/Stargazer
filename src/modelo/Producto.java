@@ -1,9 +1,12 @@
 package modelo;
 
+import java.util.Date;
 import java.util.Objects;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 //Para sorpresa de nadie, esta es DTO.
-public class Producto {
+public class Producto{
     
     private static int seqId = 0;
     
@@ -19,17 +22,22 @@ public class Producto {
     private int stockMax;
     private int existencias;
     
+    private Date fechaAlta;
+    
+    /*
+    Mediador quitado.
+    */
     
     //Constructor vacío.
     public Producto(){
-        
+                
     }
     
     // Constructor
     public Producto(int id, String nombre, String ubicacion, double precio, double costo,
                     double descuento, String categoria, int proveedor, int stockMin,
-                    int stockMax, int existencias) {
-        
+                    int stockMax, int existencias, Date fechaAlta) {
+                
         if(id != 0){
            
             this.id = incrementarId();
@@ -50,11 +58,13 @@ public class Producto {
         this.stockMin = stockMin;
         this.stockMax = stockMax;
         this.existencias = existencias;
+        this.fechaAlta = fechaAlta;
         
     }
 
-    public Producto(String nombre, String ubicacion, double precio, double costo, double descuento, String categoria, int proveedor, int stockMin, int stockMax, int existencias) {
-        
+    public Producto(String nombre, String ubicacion, double precio, double costo, double descuento, String categoria, 
+            int proveedor, int stockMin, int stockMax, int existencias, Date fechaAlta) {
+                
         this.nombre = nombre;
         this.ubicacion = ubicacion;
         this.precio = precio;
@@ -65,10 +75,12 @@ public class Producto {
         this.stockMin = stockMin;
         this.stockMax = stockMax;
         this.existencias = existencias;
-        
+        this.fechaAlta = fechaAlta;
     }
     
-     //Setters y Getters
+    
+    
+    //Setters y Getters
     public void setNombre(String nombre) { this.nombre = nombre; }
     public void setUbicacion(String ubicacion) { this.ubicacion = ubicacion; }
     public void setPrecio(double precio) { this.precio = precio; }
@@ -79,7 +91,10 @@ public class Producto {
     public void setStockMin(int stockMin) { this.stockMin = stockMin; }
     public void setStockMax(int stockMax) { this.stockMax = stockMax; }
     public void setExistencias(int existencias) { this.existencias = existencias; }
-
+    public void setFechaAlta(Date fechaAlta) {
+        this.fechaAlta = fechaAlta;
+    }
+    
     public int getId() { return id; }
     public String getNombre() { return nombre; }
     public String getUbicacion() { return ubicacion; }
@@ -90,27 +105,36 @@ public class Producto {
     public int getProveedor() { return proveedor; }
     public int getStockMin() { return stockMin; }
     public int getStockMax() { return stockMax; }
-    public int getExistencias() { return existencias; }    
+    public int getExistencias() { return existencias; }
+    
+     public Date getFechaAlta() {
+        return fechaAlta;
+    }
+
+    
+    
 
     @Override
     public String toString() {
+        
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        
         return "\nProducto" +
-               // "id = " + id +
+                //"id = " + id +
                 "\nnombre = " + nombre +
-                "\nubicacion = " + ubicacion +
-                "\nprecio = " + precio +
-                "\ncosto = " + costo +
-                "\ndescuento = " + descuento +
-                "\ncategoria = " + categoria +
-                "\nproveedor = " + proveedor +
-                "\nstockMin = " + stockMin +
-                "\nstockMax = " + stockMax +
-                "\nexistencias = " + existencias 
+                "\nubicacion = " + ubicacion + 
+                "\nprecio = " + precio + 
+                "\ncosto = " + costo + 
+                "\ndescuento = " + descuento + 
+                "\ncategoria = " + categoria + 
+                "\nproveedor = " + proveedor + 
+                "\nstockMin = " + stockMin + 
+                "\nstockMax = " + stockMax + 
+                "\nexistencias = " + existencias +
+                "\nfechaAlta = " + formatter.format(fechaAlta)
                 ;
     }
     
-    //TO-DO DEFINIR EQUALS Y HASHCODE
-
     @Override
     public int hashCode() {
         int hash = 3;
@@ -141,10 +165,9 @@ public class Producto {
         
         return ++seqId;
         
-    }
+    } 
     
-}
-
+ }
 
 
 /*
