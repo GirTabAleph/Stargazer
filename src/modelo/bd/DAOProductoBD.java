@@ -5,8 +5,6 @@ import exceptions.NameNotFoundException;
 import exceptions.ProductIDNotFoundException;
 import modelo.IDAOProducto;
 import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import modelo.Producto;
 
 /**
@@ -28,7 +26,7 @@ public class DAOProductoBD implements IDAOProducto {
         
         String instruccion = """
                                     INSERT INTO producto(
-                                    
+                                    	
                                     	
                                     	nombre,
                                     	ubicacion,
@@ -39,7 +37,8 @@ public class DAOProductoBD implements IDAOProducto {
                                     	proveedor,
                                     	stockMin,
                                     	stockMax,
-                                    	existencias
+                                    	existencias,
+                                        fechaAlta
                                     
                                     ) VALUES (
                                     	
@@ -53,7 +52,8 @@ public class DAOProductoBD implements IDAOProducto {
                                     	?,
                                     	?,
                                     	?,
-                                    	?
+                                    	?,
+                                        ?
                                     )
                                     
                                     """;
@@ -65,7 +65,7 @@ public class DAOProductoBD implements IDAOProducto {
                 = conexion.prepareStatement(instruccion)){
             
             conexion.setAutoCommit(false);
-            
+           
             instruccionPreparada.setString(1, producto.getNombre());
             instruccionPreparada.setString(2, producto.getUbicacion());
             instruccionPreparada.setDouble(3, producto.getPrecio());
@@ -76,6 +76,7 @@ public class DAOProductoBD implements IDAOProducto {
             instruccionPreparada.setInt(8, producto.getStockMin());
             instruccionPreparada.setInt(9, producto.getStockMax());
             instruccionPreparada.setInt(10, producto.getExistencias());
+            instruccionPreparada.setDate(11, new Date(producto.getFechaAlta().getTime()) );
             
             if(instruccionPreparada.executeUpdate() == 1){
                 
@@ -114,7 +115,6 @@ public class DAOProductoBD implements IDAOProducto {
                              DELETE FROM producto 
                              	WHERE id = ?
                              """;
-        
         try(PreparedStatement instruccionPreparada
                 = conexion.prepareStatement(instruccion)){
             
@@ -159,7 +159,8 @@ public class DAOProductoBD implements IDAOProducto {
                                 proveedor = ?,
                                 stockMin = ?,
                                 stockMax = ?,
-                                existencias = ?
+                                existencias = ?,
+                                fechaAlta = ?
                              
                              WHERE id = ?
                              """;
@@ -178,7 +179,8 @@ public class DAOProductoBD implements IDAOProducto {
             instruccionPreparada.setInt(8, producto.getStockMin());
             instruccionPreparada.setInt(9, producto.getStockMax());
             instruccionPreparada.setInt(10, producto.getExistencias());
-            instruccionPreparada.setInt(11, id);
+            instruccionPreparada.setDate(11, new Date(producto.getFechaAlta().getTime()));
+            instruccionPreparada.setInt(12, id);
 
             if(instruccionPreparada.executeUpdate() == 1){
                 
@@ -236,7 +238,8 @@ public class DAOProductoBD implements IDAOProducto {
                         conjuntoResultados.getInt("proveedor"),
                         conjuntoResultados.getInt("stockMin"),
                         conjuntoResultados.getInt("stockMax"),
-                        conjuntoResultados.getInt("existencias"));
+                        conjuntoResultados.getInt("existencias"),
+                        conjuntoResultados.getDate("fechaAlta"));
                     
                 } else {
                     
@@ -294,7 +297,8 @@ public class DAOProductoBD implements IDAOProducto {
                         conjuntoResultados.getInt("proveedor"),
                         conjuntoResultados.getInt("stockMin"),
                         conjuntoResultados.getInt("stockMax"),
-                        conjuntoResultados.getInt("existencias"));
+                        conjuntoResultados.getInt("existencias"),
+                        conjuntoResultados.getDate("fechaAlta"));
                     
                 } else {
                     
@@ -316,8 +320,7 @@ public class DAOProductoBD implements IDAOProducto {
         }
         
         return productoRegresar;
-        
-        
+               
     }
 
     @Override
@@ -411,8 +414,9 @@ public class DAOProductoBD implements IDAOProducto {
     public static void main(String args[]){
         
         DAOProductoBD dao = new DAOProductoBD();
+        //Este null es mandar un mediador nulo.
         Producto producto = new Producto(1, "Jabón", "Aquí", 10.50, 1.50,
-                0.0, "Limpieza", 1, 1, 10, 5);
+                0.0, "Limpieza", 1, 1, 10, 5, new java.util.Date() );
         //dao.agregarProducto(producto);
         
         /*
