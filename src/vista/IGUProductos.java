@@ -16,6 +16,7 @@ import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import com.toedter.calendar.JDateChooser;
+import java.awt.Dimension;
 
 public class IGUProductos extends VentanaInterna{
     
@@ -87,12 +88,14 @@ public class IGUProductos extends VentanaInterna{
     
     private JDateChooser txFechaAlta;
     
+    private DateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+    
     //Construir ventana en el constructor.
     private IGUProductos(){
         
         //redimensionable
         super("Catálogo de productos", true, true, true, true);
-        setSize(690, 590);
+        setSize(875, 600);
         
         initComponents();
         
@@ -132,59 +135,30 @@ public class IGUProductos extends VentanaInterna{
         btnLimpiar = new JButton("Limpiar campos");
         
         toolbar = getToolBar();
-        
-        tabla = new JTable();
-        
-        //Escucha para eventos de ratón.
-        tabla.addMouseListener(controlProductos);
-        
-        modeloTabla = new DefaultTableModel(){
-            @Override
-            public boolean isCellEditable(int renglon, int columna){
                 
-                return false;
-                
-            }
-        };
-
-        modelo = new DAOProductoBD();
-        
-        //Esta matriz son propiamente los productos.
-        matrizProductos = modelo.getAllProductos();
-        
-        //Para las columnas de la tabla.
-        /*
-        int id, String nombre, String ubicacion, double precio, double costo,
-                    double descuento, String categoria, int proveedor, int stockMin,
-                    int stockMax, int existencias) {
-        
-        */
-        
-        
-        modeloTabla.setDataVector(matrizProductos, titulosTabla);
-        
-        txFechaAlta = new JDateChooser("dd/MM/yyyy", "##/##/####", '_');
-        
-        
+        txFechaAlta = new JDateChooser("dd/MM/yyyy", "##/##/####", '_');    
        
     }
     
     public JPanel getPanelDatos(){
         
         JPanel panelDatos = new JPanel();
-        panelDatos.setLayout(new GridLayout(11, 2));
+        panelDatos.setLayout(new GridLayout(12, 2));
         //Agregar componentes.
         
         for(int pos = 0; pos < etiquetas.length - 1; pos++){
             
             panelDatos.add(etiquetas[pos]);
             panelDatos.add(campos[pos]);
-            
+            etiquetas[pos].setHorizontalAlignment(JLabel.RIGHT);
             
         }
         
+        etiquetas[etiquetas.length - 1].setHorizontalAlignment(JLabel.RIGHT);
+        
         panelDatos.add(etiquetas[etiquetas.length - 1]);
         panelDatos.add(txFechaAlta);
+        
         
         return panelDatos;
         
@@ -379,7 +353,7 @@ public class IGUProductos extends VentanaInterna{
             campos[campo].setEnabled(true);
             
         }
-        campos[campos.length - 1].setEnabled(true);
+        txFechaAlta.setEnabled(true);
     }
     
     public void desactivarID(){
@@ -430,6 +404,7 @@ public class IGUProductos extends VentanaInterna{
         tabla = new JTable();
         
         JScrollPane scroll = new JScrollPane();
+        tabla.setPreferredScrollableViewportSize(new Dimension(850,200) );
         scroll.setViewportView(tabla);
         panelTabla.add(scroll);
         
@@ -440,28 +415,56 @@ public class IGUProductos extends VentanaInterna{
     }
     
     public void setTablaProductos(){
+                
+        //Escucha para eventos de ratón.
+        tabla.addMouseListener(controlProductos);
         
+        modeloTabla = new DefaultTableModel(){
+            
+            @Override
+            public boolean isCellEditable(int renglon, int columna){
+                
+                return false;
+                
+            }
+        };
+
+        modelo = new DAOProductoBD();
+        
+        //Esta matriz son propiamente los productos.
+        matrizProductos = modelo.getAllProductos();
+        
+        //Para las columnas de la tabla.
+        /*
+        int id, String nombre, String ubicacion, double precio, double costo,
+                    double descuento, String categoria, int proveedor, int stockMin,
+                    int stockMax, int existencias) {
+        
+        */
+
         String [] titulos = {"ID", "Nombre", "Ubicación", "Precio", "Costo", 
             "Descuento", "Categoría", "Proveedor", "Stock mínimo", "Stock máximo",
             "Existencias", "Fecha de alta"};
-        
-        modeloTabla = new DefaultTableModel(){
-                
-                @Override
-                public boolean isCellEditable(int renglon, int columna){
-                    
-                    return false;
-                    
-                }
-            
-            };
-        
-        //Mover esto eventualmente.
-        Object[][] datos = modelo.getAllProductos();
-        modeloTabla.setDataVector(datos, titulos);
+
+        modeloTabla.setDataVector(matrizProductos, titulos);
         
         tabla.setModel(modeloTabla);
         tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        tabla.getColumnModel().getColumn(0).setPreferredWidth(40);
+        tabla.getColumnModel().getColumn(1).setPreferredWidth(110);
+        tabla.getColumnModel().getColumn(2).setPreferredWidth(120);
+        tabla.getColumnModel().getColumn(3).setPreferredWidth(50);
+        tabla.getColumnModel().getColumn(4).setPreferredWidth(50);
+        tabla.getColumnModel().getColumn(5).setPreferredWidth(50);
+        tabla.getColumnModel().getColumn(6).setPreferredWidth(120);
+        tabla.getColumnModel().getColumn(7).setPreferredWidth(40);
+        tabla.getColumnModel().getColumn(8).setPreferredWidth(50);
+        tabla.getColumnModel().getColumn(9).setPreferredWidth(50);
+        tabla.getColumnModel().getColumn(10).setPreferredWidth(40);
+        tabla.getColumnModel().getColumn(11).setPreferredWidth(110);
+        
+        tabla.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         
     }
     
