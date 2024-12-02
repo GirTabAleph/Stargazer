@@ -4,7 +4,9 @@ package modelo.bd;
 
 import exceptions.IDNotFoundException;
 import java.sql.*;
+import java.util.*;
 import modelo.IDAOVenta;
+import modelo.ProductoVendido;
 import modelo.Venta;
 
 /**
@@ -15,7 +17,7 @@ public class DAOVentaBD implements IDAOVenta{
     
     private Connection conexion;
     
-    public DAOVentaBD(){
+    private DAOVentaBD(){
         
         this.conexion = ConexionBD.getInstance();
         
@@ -25,17 +27,16 @@ public class DAOVentaBD implements IDAOVenta{
     public boolean insertarVenta(Venta venta) {
         
         /*
-        public Venta(int idProductoV, double costoUnitario, double costoTotal, 
-            LocalDateTime fechaVenta, int idZona, int idCliente, int idVendedor,
-            boolean requiereFactura) {
+            public Venta(Date fechaVenta, int idZona, int idCliente, 
+        int idVendedor, boolean requiereFactura, 
+        List<ProductoVendido> productosV) {
+
         */
-        
-        String instruccion = """
+        boolean correcto = true;
+
+        String insercionVenta = """
                                     INSERT INTO venta(
                                     	                                    	
-                                    	idProductoV,
-                                    	costoUnitario,
-                                    	costoTotal,
                                     	fechaVenta,
                                     	idZona,
                                     	idCliente,
@@ -44,9 +45,6 @@ public class DAOVentaBD implements IDAOVenta{
                                     
                                     ) VALUES (
                                     	
-                                    	
-                                    	?,
-                                    	?,
                                     	?,
                                     	?,
                                     	?,
@@ -56,22 +54,111 @@ public class DAOVentaBD implements IDAOVenta{
                                     )
                                     
                                     """;
-        boolean correcto = true;
+        
+        ResultSet resultadoVenta = null;
+        int idVenta;
+        
+        try(PreparedStatement instruccionPrepVenta
+                = conexion.prepareStatement(insercionVenta, Statement.RETURN_GENERATED_KEYS)){
+            
+            instruccionPrepVenta.setDate(1, new java.sql.Date(venta.getFechaVenta().getTime()) );
+            instruccionPrepVenta.setInt(2, venta.getIdZona());
+            instruccionPrepVenta.setInt(3, venta.getIdCliente());
+            instruccionPrepVenta.setInt(4, venta.getIdVendedor());
+            instruccionPrepVenta.setBoolean(5, venta.getRequiereFactura());
+            
+            conexion.setAutoCommit(false);
+            
+            if(instruccionPrepVenta.executeUpdate() == 1){
+                
+                resultadoVenta = instruccionPrepVenta.getGeneratedKeys();
+                
+                if(resultadoVenta.next()){
+                    
+                    idVenta = resultadoVenta.getInt(1);
+                    List<ProductoVendido> listaProductos = venta.getProductosV();
+        
+                    String insercionProducto = """
+                                   INSERT INTO productoVendido (
+                                   
+                                        idVenta,
+                                        idProducto,
+                                        cantidad,
+                                        precio,
+                                        descuento
+                                   
+                                   ) VALUES (
+                                        
+                                        ?,
+                                        ?,
+                                        ?,
+                                        ?,
+                                        ?
+                                   
+                                   )
+                                   
+                                   """;
+                                    
+                    try(PreparedStatement instruccionPrepProducto
+                            = conexion.prepareStatement(insercionProducto) ){
+
+                        for(ProductoVendido producto: listaProductos){
+
+                            /*
+                            idVenta,
+                                                    idProducto,
+                                                    cantidad,
+                                                    precio,
+                                                    descuento
+                            */
+
+                            instruccionPrepProducto.setInt(1, idVenta); //Variable generada
+                            instruccionPrepProducto.setInt(2, producto.getIdProducto());
+                            instruccionPrepProducto.setInt(3, producto.getCantidad());
+                            instruccionPrepProducto.setDouble(4, producto.getPrecio());
+                            instruccionPrepProducto.setDouble(5, producto.getDescuento());
+
+                        } //For each
+
+
+                    }
+            
+                }
+
+                //ESTO ES LO ÚLTIMO A HACER LPM.
+                conexion.commit();
+
+                
+            } else {
+                
+                conexion.rollback();
+                
+            }
+            
+ 
+        } catch(SQLException sqlex){
+            
+            System.out.println("Me voy a pegar un tiro, algo salio mal.");
+            
+        }
+        
+        
         
         //Try con recursos.
         try(PreparedStatement instruccionPreparada 
-                = conexion.prepareStatement(instruccion)){
+                = conexion.prepareStatement(insercionVenta)){
             
             conexion.setAutoCommit(false);
            
-            instruccionPreparada.setInt(1, venta.getIdProductoV());
-            instruccionPreparada.setDouble(2, venta.getCostoUnitario());
-            instruccionPreparada.setDouble(3, venta.getCostoTotal());
-            instruccionPreparada.setDate(4, new Date(venta.getFechaVenta().getTime()));
-            instruccionPreparada.setInt(5, venta.getIdZona());
-            instruccionPreparada.setInt(6, venta.getIdCliente());
-            instruccionPreparada.setInt(7, venta.getIdVendedor());
-            instruccionPreparada.setBoolean(8, venta.getRequiereFactura());
+            instruccionPreparada.setDate(1, new java.sql.Date(venta.getFechaVenta().getTime()));
+            instruccionPreparada.setInt(2, venta.getIdZona());
+            instruccionPreparada.setInt(3, venta.getIdCliente());
+            instruccionPreparada.setInt(4, venta.getIdVendedor());
+            instruccionPreparada.setBoolean(5, venta.getRequiereFactura());
+            
+            /*
+            
+            */
             
             if(instruccionPreparada.executeUpdate() == 1){
                 
