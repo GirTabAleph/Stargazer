@@ -1,0 +1,80 @@
+CREATE DATABASE ventas;
+
+USE DATABASE ventas;
+
+CREATE TABLE producto(
+	
+	id int PRIMARY KEY,
+	nombre VARCHAR(20),
+	ubicacion VARCHAR(100),
+	precio DECIMAL(5.2),
+	costo DECIMAL(5.2),
+	descuento DECIMAL(5.2),
+	categoria VARCHAR(50),
+	proveedor INT,
+	stockMin INT, 
+	stockMax INT,
+	existencias INT
+);
+
+INSERT INTO producto(
+	
+	id,
+	nombre,
+	ubicacion,
+	precio,
+	costo,
+	descuento,
+	categoria,
+	proveedor,
+	stockMin,
+	stockMax,
+	existencias
+
+) VALUES (
+	
+	?,
+	?,
+	?,
+	?,
+	?,
+	?,
+	?,
+	?,
+	?,
+	?,
+	?
+);
+	
+
+DELETE FROM producto 
+	WHERE id = ?;
+
+
+-- **********
+
+
+CREATE TABLE venta (
+
+    idVenta INT PRIMARY KEY AUTO_INCREMENT,
+    fechaVenta DATETIME NOT NULL,
+    idZona INT NOT NULL,
+    idCliente INT NOT NULL,
+    idVendedor INT NOT NULL,
+    requiereFactura BOOLEAN NOT NULL
+
+);
+
+CREATE TABLE productoVendido (
+
+	idVenta INT NOT NULL,
+	idProducto INT NOT NULL REFERENCES producto(id),
+	cantidad INT NOT NULL,
+	precio DECIMAL(5.2) NOT NULL,
+	descuento DECIMAL(5.2) NULL,
+
+	PRIMARY KEY (idVenta, idProducto), 
+	
+	FOREIGN KEY (idVenta) REFERENCES venta(idVenta)	
+
+);
