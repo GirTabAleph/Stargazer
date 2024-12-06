@@ -6,10 +6,8 @@ public interface IDAOVenta {
     
     public boolean insertarVenta(Venta venta);
     
-    public boolean cancelarVenta(int idVenta) throws IDNotFoundException;
-    
-    public int buscarVenta(int idVenta);
-    
-    public Venta getVenta(int idVenta);
+    public boolean cancelarVenta(int idVenta, java.util.Date fechaCancelacion, String motivoCancel) throws IDNotFoundException;
+        
+    public Venta getVenta(int idVenta) throws IDNotFoundException;
     
 }
