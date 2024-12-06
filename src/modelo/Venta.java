@@ -23,18 +23,19 @@ public class Venta /*implements IVenta*/{
     private int idVenta;
     //Total ventas será método.
     private Date fechaVenta;
-    private int idZona;
     private int idCliente;
     private int idVendedor;
     private boolean requiereFactura;
-    
     private List <ProductoVendido> productosV  = new ArrayList<ProductoVendido>(); //Todos los prods. de la venta.
+    private boolean cancelada;
+    private Date fechaCancelacion;
+    private String motivoCancel;
 
-    public Venta(int idVenta, Date fechaVenta, int idZona, int idCliente, int idVendedor, boolean requiereFactura, List<ProductoVendido> productosV) {
+    public Venta(int idVenta, Date fechaVenta, int idCliente, int idVendedor, 
+            boolean requiereFactura, List<ProductoVendido> productosV) {
     
         this.idVenta = idVenta;
         this.fechaVenta = fechaVenta;
-        this.idZona = idZona;
         this.idCliente = idCliente;
         this.idVendedor = idVendedor;
         this.requiereFactura = requiereFactura;
@@ -42,14 +43,13 @@ public class Venta /*implements IVenta*/{
     
     }
 
-    public Venta(Date fechaVenta, int idZona, int idCliente, int idVendedor, boolean requiereFactura, List<ProductoVendido> productosV) {
+    public Venta(Date fechaVenta, int idCliente, int idVendedor,
+            boolean requiereFactura, List<ProductoVendido> productosV) {
     
         this.fechaVenta = fechaVenta;
-        this.idZona = idZona;
         this.idCliente = idCliente;
         this.idVendedor = idVendedor;
         this.requiereFactura = requiereFactura;
-        this.productosV = productosV;
     
     }
 
@@ -73,6 +73,7 @@ public class Venta /*implements IVenta*/{
         
     } 
 
+    
     public int getIdVenta() {
         return idVenta;
     }
@@ -87,14 +88,6 @@ public class Venta /*implements IVenta*/{
 
     public void setFechaVenta(Date fechaVenta) {
         this.fechaVenta = fechaVenta;
-    }
-
-    public int getIdZona() {
-        return idZona;
-    }
-
-    public void setIdZona(int idZona) {
-        this.idZona = idZona;
     }
 
     public int getIdCliente() {
@@ -121,11 +114,38 @@ public class Venta /*implements IVenta*/{
         this.requiereFactura = requiereFactura;
     }
 
-    public List <ProductoVendido> getProductosV() { return productosV;}
+    public List <ProductoVendido> getProductosV() {
+        return productosV;
+    }
 
     public void setProductosV(List <ProductoVendido> productosV) {
         this.productosV = productosV;
     }
+
+    public boolean getCancelada() {
+        return cancelada;
+    }
+
+    public void setCancelada(boolean cancelada) {
+        this.cancelada = cancelada;
+    }
+
+    public Date getFechaCancelacion() {
+        return fechaCancelacion;
+    }
+
+    public void setFechaCancelacion(Date fechaCancelacion) {
+        this.fechaCancelacion = fechaCancelacion;
+    }
+
+    public String getMotivoCancel() {
+        return motivoCancel;
+    }
+
+    public void setMotivoCancel(String motivoCancel) {
+        this.motivoCancel = motivoCancel;
+    }
+    
 
     @Override
     public int hashCode() {
@@ -152,11 +172,9 @@ public class Venta /*implements IVenta*/{
     @Override
     public String toString() { //Dar formato, un dato por renglón y con \n.
         return "Venta{" + "idVenta=" + idVenta + ", fechaVenta=" +
-                fechaVenta + ", idZona=" + idZona + ", idCliente=" +
+                fechaVenta + ", idCliente=" +
                 idCliente + ", idVendedor=" + idVendedor + ", requiereFactura=" + 
                 requiereFactura + ", productosV=" + productosV + '}';
     }
-    
-    
     
 }
