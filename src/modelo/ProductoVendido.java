@@ -8,16 +8,21 @@ public class ProductoVendido{
     private double precio;
     private int cantidad;
     private double descuento;    
-
-    public ProductoVendido(int idProducto, double precio, int cantidad){
+    
+    public ProductoVendido(){
+        
+    }
+    
+    public ProductoVendido(int idProducto, double precio, int cantidad, double descuento){
         
         this.idProducto = idProducto;
         this.precio = precio;
         this.cantidad = cantidad;
+        this.descuento = descuento;
 
     }
 
-    public int getIdProducto(Producto producto) {
+    public int getIdProducto() {
         return idProducto;
     }
 
