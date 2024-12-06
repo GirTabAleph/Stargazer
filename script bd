@@ -54,14 +54,19 @@ DELETE FROM producto
 -- **********
 
 
+DROP TABLE productovendido CASCADE;
+DROP TABLE venta CASCADE;
+
 CREATE TABLE venta (
 
     idVenta INT PRIMARY KEY AUTO_INCREMENT,
     fechaVenta DATETIME NOT NULL,
-    idZona INT NOT NULL,
     idCliente INT NOT NULL,
     idVendedor INT NOT NULL,
-    requiereFactura BOOLEAN NOT NULL
+    requiereFactura BOOLEAN NOT NULL,
+    cancelada BOOLEAN NULL,
+    fechaCancelacion DATETIME NULL,
+    motivoCancelacion VARCHAR(100) NULL
 
 );
 
