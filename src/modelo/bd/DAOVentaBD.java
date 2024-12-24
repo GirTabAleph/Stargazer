@@ -1,4 +1,6 @@
 //Nota: Hacerle su adapter a la interfaz para darle versatilidad.
+//Nota de la nota: creo que ya no, modificamos la interfaz y 
+//ya no tiene esa bronca.
 
 package modelo.bd;
 
@@ -8,6 +10,7 @@ import java.util.*;
 import modelo.IDAOVenta;
 import modelo.ProductoVendido;
 import modelo.Venta;
+import exceptions.ClientIDNotFoundException;
 
 /**
  *
@@ -286,6 +289,372 @@ public class DAOVentaBD implements IDAOVenta{
         
     }
     
+    public Object[][] getCanceladas() {
+    
+        String instruccion = """
+                             SELECT COUNT(*)
+                             FROM venta
+                             WHERE cancelada = 1
+                             """;
+        
+        String instruccion2 = """
+                             SELECT * 
+                             FROM venta
+                             WHERE cancelada = 1
+                             """;
+        
+        Object[][] ventas = null;
+        int totalTuplas;
+        
+        try(PreparedStatement instruccionPreparada 
+                = conexion.prepareStatement(instruccion)){
+            
+            try(ResultSet conjuntoResultados = instruccionPreparada.executeQuery()){
+                
+                if(conjuntoResultados.next()){
+                    
+                    totalTuplas = conjuntoResultados.getInt(1); //Obtenemos un solo resultado (el count).
+                    ventas = new Object[totalTuplas][8];
+                    
+                    try(PreparedStatement instruccionPreparada2 
+                            = conexion.prepareStatement(instruccion2)){
+                        
+                        try(ResultSet conjuntoResultados2 = instruccionPreparada2.executeQuery()){
+                            
+                            //Para llenar la matriz.
+                            int renglon = 0;
+                            while(conjuntoResultados2.next()){
+                                
+                                /*
+                                int idVenta, Date fechaVenta, int idCliente, int idVendedor, 
+                                boolean requiereFactura, List<ProductoVendido> productosV
+                                */
+                                
+                                ventas[renglon][0] = conjuntoResultados2.getInt("idVenta");
+                                ventas[renglon][1] = conjuntoResultados2.getDate("fechaVenta");
+                                ventas[renglon][2] = conjuntoResultados2.getInt("idCliente");
+                                ventas[renglon][3] = conjuntoResultados2.getInt("idVendedor");
+                                ventas[renglon][4] = conjuntoResultados2.getBoolean("requiereFactura");
+                                ventas[renglon][5] = conjuntoResultados2.getBoolean("cancelada");
+                                ventas[renglon][6] = conjuntoResultados2.getDate("fechaCancelacion");
+                                ventas[renglon][7] = conjuntoResultados2.getString("motivoCancelacion");
+                                                                
+                                renglon++;
+                                
+                            }
+                            
+                        } catch(SQLException sqlex){
+                            
+                            sqlex.printStackTrace();
+                            
+                        }
+                        
+                    } catch(SQLException sqlex){
+                        
+                        sqlex.printStackTrace();
+                        
+                    }
+  
+                } //LLAVE DE IF. NO BORRAR.
+                
+                
+            } catch(SQLException sqlex){
+                
+                sqlex.printStackTrace();
+                
+            }
+            
+        } catch(SQLException sqlex){
+            
+            sqlex.printStackTrace();
+            
+        }
+        
+        return ventas;
+
+    }
+    
+    //Muestra las no canceladas.
+    public Object[][] getActivas() {
+    
+        String instruccion = """
+                             SELECT COUNT(*)
+                             FROM venta
+                             WHERE cancelada != 1
+                             """;
+        
+        String instruccion2 = """
+                             SELECT * 
+                             FROM venta
+                             WHERE cancelada != 1
+                             """;
+        
+        Object[][] ventas = null;
+        int totalTuplas;
+        
+        try(PreparedStatement instruccionPreparada 
+                = conexion.prepareStatement(instruccion)){
+            
+            try(ResultSet conjuntoResultados = instruccionPreparada.executeQuery()){
+                
+                if(conjuntoResultados.next()){
+                    
+                    totalTuplas = conjuntoResultados.getInt(1); //Obtenemos un solo resultado (el count).
+                    ventas = new Object[totalTuplas][8];
+                    
+                    try(PreparedStatement instruccionPreparada2 
+                            = conexion.prepareStatement(instruccion2)){
+                        
+                        try(ResultSet conjuntoResultados2 = instruccionPreparada2.executeQuery()){
+                            
+                            //Para llenar la matriz.
+                            int renglon = 0;
+                            while(conjuntoResultados2.next()){
+                                
+                                /*
+                                int idVenta, Date fechaVenta, int idCliente, int idVendedor, 
+                                boolean requiereFactura
+                                */
+                                
+                                ventas[renglon][0] = conjuntoResultados2.getInt("idVenta");
+                                ventas[renglon][1] = conjuntoResultados2.getDate("fechaVenta");
+                                ventas[renglon][2] = conjuntoResultados2.getInt("idCliente");
+                                ventas[renglon][3] = conjuntoResultados2.getInt("idVendedor");
+                                ventas[renglon][4] = conjuntoResultados2.getBoolean("requiereFactura");
+                                ventas[renglon][5] = conjuntoResultados2.getBoolean("cancelada");
+                                ventas[renglon][6] = conjuntoResultados2.getDate("fechaCancelacion");
+                                ventas[renglon][7] = conjuntoResultados2.getString("motivoCancelacion");
+                                                                
+                                renglon++;
+                                
+                            }
+                            
+                        } catch(SQLException sqlex){
+                            
+                            sqlex.printStackTrace();
+                            
+                        }
+                        
+                    } catch(SQLException sqlex){
+                        
+                        sqlex.printStackTrace();
+                        
+                    }
+  
+                } //LLAVE DE IF. NO BORRAR.
+                
+                
+            } catch(SQLException sqlex){
+                
+                sqlex.printStackTrace();
+                
+            }
+            
+        } catch(SQLException sqlex){
+            
+            sqlex.printStackTrace();
+            
+        }
+        
+        return ventas;
+
+    }
+    
+    public Object[][] getVentasByClient(int idCliente) throws ClientIDNotFoundException{
+        
+        String instruccionSeleccion = """
+                             SELECT *
+                             FROM venta
+                             WHERE idCliente = ?
+                             """
+                             ;
+        
+        String instruccionConteo = """
+                             SELECT COUNT(*)
+                             FROM venta
+                             WHERE idCliente = ?
+                             """;
+        
+        Object[][] ventasCliente = null;
+        
+        int totalTuplas;
+        
+        try(PreparedStatement preparadaConteo = 
+                conexion.prepareStatement(instruccionConteo)){
+       
+            preparadaConteo.setInt(1, idCliente); //Única interrogante es id.
+            
+            try(ResultSet conjuntoResultados = preparadaConteo.executeQuery()){
+                
+                if(conjuntoResultados.next()){
+                    
+                    totalTuplas = conjuntoResultados.getInt(1); //Obtenemos un solo resultado (el count).
+                    ventasCliente = new Object[totalTuplas][8];
+                    
+                    try(PreparedStatement preparadaSeleccion 
+                            = conexion.prepareStatement(instruccionSeleccion)){
+                        
+                        preparadaSeleccion.setInt(1, idCliente);
+                         
+                        try(ResultSet conjuntoResultados2 = preparadaSeleccion.executeQuery()){
+                            
+                            //Para llenar la matriz.
+                            int renglon = 0;
+                            while(conjuntoResultados2.next()){
+                                
+                                /*
+                                int idVenta, Date fechaVenta, int idCliente, int idVendedor, 
+                                boolean requiereFactura
+                                */
+                                
+                                ventasCliente[renglon][0] = conjuntoResultados2.getInt("idVenta");
+                                ventasCliente[renglon][1] = conjuntoResultados2.getDate("fechaVenta");
+                                ventasCliente[renglon][2] = conjuntoResultados2.getInt("idCliente");
+                                ventasCliente[renglon][3] = conjuntoResultados2.getInt("idVendedor");
+                                ventasCliente[renglon][4] = conjuntoResultados2.getBoolean("requiereFactura");
+                                ventasCliente[renglon][5] = conjuntoResultados2.getBoolean("cancelada");
+                                ventasCliente[renglon][6] = conjuntoResultados2.getDate("fechaCancelacion");
+                                ventasCliente[renglon][7] = conjuntoResultados2.getString("motivoCancelacion");
+                                                                
+                                renglon++;
+                                
+                            } //Llave while
+                            
+                        } catch(SQLException sqlex){
+                            
+                            System.out.println("Error ejecutando la selección");
+                            sqlex.printStackTrace();
+                            
+                        }
+                         
+                     } catch(SQLException sqlex){
+                         
+                         System.out.println("Error preparando la selección");
+                         sqlex.printStackTrace();
+                         
+                     }
+                    
+                } else {
+                    
+                    throw new ClientIDNotFoundException(idCliente);
+                    
+                } //Fin else 
+                
+            } catch(SQLException sqlex){
+                
+                System.out.println("Error ejecutando el conteo");
+                sqlex.printStackTrace();
+               
+            }
+        
+        } catch(SQLException sqlex){
+            
+            System.out.println("Error preparando instrucción de conteo");
+            sqlex.printStackTrace();
+            
+        }
+        
+        return ventasCliente;
+        
+    }
+    
+    //Recibe dos fechas como parámetro, no sé si son java.sql.Date o java.util.Date
+    public Object[][] getByDateRange(java.sql.Date fechaInicio, java.sql.Date fechaFin){ 
+        
+        String instruccionSeleccion = """
+                             SELECT *
+                             FROM venta
+                             WHERE fechaVenta BETWEEN ? AND ?
+                             """
+                             ;
+        
+        String instruccionConteo = """
+                             SELECT COUNT(*)
+                             FROM venta
+                             WHERE fechaVenta BETWEEN ? AND ?
+                             """;
+        
+        Object[][] ventasPorFechas = null;
+        
+        int totalTuplas;
+        
+        try(PreparedStatement preparadaConteo = 
+                conexion.prepareStatement(instruccionConteo)){
+       
+            preparadaConteo.setDate(1, fechaInicio); //1era interrogante es la fecha de inicio.
+            preparadaConteo.setDate(2, fechaFin); //2da interrogante es la fecha final.
+            
+            try(ResultSet conjuntoResultados = preparadaConteo.executeQuery()){
+                
+                if(conjuntoResultados.next()){
+                    
+                    totalTuplas = conjuntoResultados.getInt(1); //Obtenemos un solo resultado (el count).
+                    ventasPorFechas = new Object[totalTuplas][8];
+                    
+                    try(PreparedStatement preparadaSeleccion 
+                            = conexion.prepareStatement(instruccionSeleccion)){
+                        
+                        preparadaSeleccion.setDate(1, fechaInicio);
+                        preparadaSeleccion.setDate(2, fechaFin);
+                         
+                        try(ResultSet conjuntoResultados2 = preparadaSeleccion.executeQuery()){
+                            
+                            //Para llenar la matriz.
+                            int renglon = 0;
+                            while(conjuntoResultados2.next()){
+                                
+                                /*
+                                int idVenta, Date fechaVenta, int idCliente, int idVendedor, 
+                                boolean requiereFactura
+                                */
+                                
+                                ventasPorFechas[renglon][0] = conjuntoResultados2.getInt("idVenta");
+                                ventasPorFechas[renglon][1] = conjuntoResultados2.getDate("fechaVenta");
+                                ventasPorFechas[renglon][2] = conjuntoResultados2.getInt("idCliente");
+                                ventasPorFechas[renglon][3] = conjuntoResultados2.getInt("idVendedor");
+                                ventasPorFechas[renglon][4] = conjuntoResultados2.getBoolean("requiereFactura");
+                                ventasPorFechas[renglon][5] = conjuntoResultados2.getBoolean("cancelada");
+                                ventasPorFechas[renglon][6] = conjuntoResultados2.getDate("fechaCancelacion");
+                                ventasPorFechas[renglon][7] = conjuntoResultados2.getString("motivoCancelacion");
+                                                                
+                                renglon++;
+                                
+                            } //Llave while
+                            
+                        } catch(SQLException sqlex){
+                            
+                            System.out.println("Error ejecutando la selección");
+                            sqlex.printStackTrace();
+                            
+                        }
+                         
+                     } catch(SQLException sqlex){
+                         
+                         System.out.println("Error preparando la selección");
+                         sqlex.printStackTrace();
+                         
+                     }
+                    
+                } 
+                
+            } catch(SQLException sqlex){
+                
+                System.out.println("Error ejecutando el conteo");
+                sqlex.printStackTrace();
+               
+            }
+        
+        } catch(SQLException sqlex){
+            
+            System.out.println("Error preparando instrucción de conteo");
+            sqlex.printStackTrace();
+            
+        }
+        
+        return ventasPorFechas;
+        
+    }
+   
     public static void main(String args[]) throws IDNotFoundException{
         
         DAOVentaBD dao = new DAOVentaBD();
@@ -293,12 +662,15 @@ public class DAOVentaBD implements IDAOVenta{
         List <ProductoVendido> lista = new ArrayList<ProductoVendido>();
         lista.add(new ProductoVendido(1, 1.0, 1, 1.0) );
         lista.add(new ProductoVendido(2, 2.0, 2, 2.0) );
-
-        if(dao.insertarVenta(new Venta(1, new java.util.Date(), 1, 1, false, lista) )){
+        lista.add(new ProductoVendido(3, 3.0, 3, 3.0) );
+        
+        /*
+        
+        if(dao.insertarVenta(new Venta(3, new java.util.Date(), 3, 3, false, lista) )){
             
             System.out.println("Ya inserté :D");
             
-            if(dao.cancelarVenta(1, new java.util.Date(), "Porque sí")){
+            if(dao.cancelarVenta(1, new java.util.Date(), "Porque es una prueba del DAO.")){
             
                 System.out.println("Cancelada.");
             
@@ -317,12 +689,13 @@ public class DAOVentaBD implements IDAOVenta{
             
         }
         
+        */
+        
     }
     
 }
 /*
-Falta en el DAO regresar todas las ventas canceladas, las canceldasasn't,
-ventas por cliente, ventas por producto, ventas por rangos de fecha
+Diego at december 24, 2024, 12:38 says: Todos los get en teoría ya quedaron.
 
 Cuando se especifique facturar (botón de la IGU) debe pedir los datos de la factura
 
