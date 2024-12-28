@@ -559,7 +559,8 @@ public class DAOVentaBD implements IDAOVenta{
     }
     
     //Recibe dos fechas como parámetro, no sé si son java.sql.Date o java.util.Date
-    public Object[][] getByDateRange(java.sql.Date fechaInicio, java.sql.Date fechaFin){ 
+    //Actualización 27/12/24: Sí se reciben como java.util.Date, se castean dentro del método.
+    public Object[][] getByDateRange(java.util.Date fechaInicio, java.util.Date fechaFin){ 
         
         String instruccionSeleccion = """
                              SELECT *
@@ -578,11 +579,14 @@ public class DAOVentaBD implements IDAOVenta{
         
         int totalTuplas;
         
+        java.sql.Date sqlFechaInicio = new java.sql.Date(fechaInicio.getTime());
+        java.sql.Date sqlFechaFin = new java.sql.Date(fechaFin.getTime());
+        
         try(PreparedStatement preparadaConteo = 
                 conexion.prepareStatement(instruccionConteo)){
        
-            preparadaConteo.setDate(1, fechaInicio); //1era interrogante es la fecha de inicio.
-            preparadaConteo.setDate(2, fechaFin); //2da interrogante es la fecha final.
+            preparadaConteo.setDate(1, sqlFechaInicio); //1era interrogante es la fecha de inicio.
+            preparadaConteo.setDate(2, sqlFechaFin); //2da interrogante es la fecha final.
             
             try(ResultSet conjuntoResultados = preparadaConteo.executeQuery()){
                 
@@ -594,8 +598,8 @@ public class DAOVentaBD implements IDAOVenta{
                     try(PreparedStatement preparadaSeleccion 
                             = conexion.prepareStatement(instruccionSeleccion)){
                         
-                        preparadaSeleccion.setDate(1, fechaInicio);
-                        preparadaSeleccion.setDate(2, fechaFin);
+                        preparadaSeleccion.setDate(1, sqlFechaInicio);
+                        preparadaSeleccion.setDate(2, sqlFechaFin);
                          
                         try(ResultSet conjuntoResultados2 = preparadaSeleccion.executeQuery()){
                             
