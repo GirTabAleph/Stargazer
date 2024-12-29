@@ -12,8 +12,7 @@ import java.util.ArrayList;
 
 //Jesus Fucking Christ, who wrote this madness?
 //Nevermind, i did.
-//¿Por qué tiene los métodos como sobrecargas de interfaz? Para este punto ya me
-// vale madres. -XOXO Diego.
+//¿Por qué tiene los métodos como sobrecargas de interfaz? Las quité.
 
 //Tampoco es DTO, tiene más cosas que getters/setters.
 public class Venta /*implements IVenta*/{
@@ -146,6 +145,14 @@ public class Venta /*implements IVenta*/{
         this.motivoCancel = motivoCancel;
     }
     
+    public double calcularTotal(){
+        
+        double totalVentas = 0.0;
+        
+        return totalVentas;
+        
+    }
+    
 
     @Override
     public int hashCode() {
@@ -171,10 +178,57 @@ public class Venta /*implements IVenta*/{
 
     @Override
     public String toString() { //Dar formato, un dato por renglón y con \n.
-        return "Venta{" + "idVenta=" + idVenta + ", fechaVenta=" +
-                fechaVenta + ", idCliente=" +
-                idCliente + ", idVendedor=" + idVendedor + ", requiereFactura=" + 
-                requiereFactura + ", productosV=" + productosV + '}';
+        
+        return
+                "ID de la venta: " + idVenta + "\n"
+                + "Fecha de la venta: " + fechaVenta + "\n"
+                + "ID del cliente: " + idCliente + "\n"
+                + "ID del vendedor: " + idVendedor + "\n"
+                + "Requiere factura: " + requiereFactura + "\n"
+                + "Lista de productos vendidos: " + "\n"
+                + productosV + "\n";
+        
+    }
+    
+    //Subtotal es sin impuestos ni descuentos.
+    public double calcularSubtotalVenta(){
+        
+        double subtotal = 0.0;
+        
+        for(int i = 0; i <= productosV.size(); i++){
+            
+            //Casteo explícito para evitar problemas.
+            subtotal = (double)productosV.get(i).getCantidad() * productosV.get(i).getPrecio();
+            
+        }
+        
+        return subtotal;
+        
+    }
+    
+    //Cálculo del descuento de cada producto en la lista.
+    public double calcularDescuento(int idProducto){
+        
+        double precioDescuento = 0.0;
+        double factorDescuento = 0.0;        
+            
+        if(productosV.contains(idProducto)){
+            
+            if(productosV.get(idProducto).getDescuento() != 0){
+                
+                factorDescuento = 1 - (productosV.get(idProducto).getDescuento() / 100);
+                precioDescuento = factorDescuento * productosV.get(idProducto).getPrecio();
+                
+            } else {
+                
+                throw new IllegalArgumentException("El descuento no puede ser cero.");
+                
+            }
+            
+        }
+
+        return precioDescuento;
+        
     }
     
 }
